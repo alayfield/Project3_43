@@ -1,22 +1,24 @@
-//
-// Created by Adrian Layfield on 11/13/24.
-//
+#include <iostream>
+#include <iomanip>
 #include <string>
+#include <vector>
 
 using namespace std;
 
 #ifndef PROJECT3_METHODS_H
 #define PROJECT3_METHODS_H
 
+/* Includes structs to be used in both data structures
+ * Will include algorithms (Euclidean distance)
+ * I would recommend making separate files for the two data structures
+ */
+
 struct Song {
-    string id;
     double danceability;
     double energy;
-    double loudness;
     double speechiness;
     double acousticness;
     double instrumentalness;
-    double liveness;
     double valence;
     double tempo;
     int year;
@@ -24,14 +26,12 @@ struct Song {
 
 struct Album {
     string name;
-    string id;
+    string artistName;
     double danceability;
     double energy;
-    double loudness;
     double speechiness;
     double acousticness;
     double instrumentalness;
-    double liveness;
     double valence;
     double tempo;
     int year;
@@ -40,18 +40,17 @@ struct Album {
 };
 
 struct Artist{
-    string name;
-    string id;
+    string artistName;
+    string artistID;
     double danceability;
     double energy;
-    double loudness;
     double speechiness;
     double acousticness;
     double instrumentalness;
-    double liveness;
     double valence;
     double tempo;
 
     vector<Album> albums;
 };
+
 #endif //PROJECT3_METHODS_H
