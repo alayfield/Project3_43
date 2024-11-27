@@ -2,6 +2,8 @@
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <cctype>
+#include <stack>
 
 using namespace std;
 
@@ -52,5 +54,7 @@ struct Artist{
 
     vector<Album> albums;
 };
+
+void formatString(string &format);
 
 #endif //PROJECT3_METHODS_H

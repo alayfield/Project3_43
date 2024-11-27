@@ -47,6 +47,9 @@ void User::userPrompts(int prompt) {
     if (prompt == 3) {
         cout << "Invalid input, please try again" << endl;
     }
+    if (prompt == 4) {
+        cout << "Please add another album" << endl;
+    }
 }
 
 void User::displayAlbum(Album albumRec) {
@@ -82,4 +85,8 @@ void User::addPref(const Album& albumLike) {
     instrumentalness = (instrumentalness*(numLiked - 1) + albumLike.instrumentalness) / numLiked;
     valence = (valence*(numLiked - 1) + albumLike.valence) / numLiked;
     tempo = (tempo*(numLiked - 1) + albumLike.tempo) / numLiked;
+}
+
+int User::getPrefNum() {
+    return int(userPref.size());
 }

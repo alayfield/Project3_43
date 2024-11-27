@@ -24,6 +24,7 @@ public:
     void displayAlbum(Album albumRec);
     void setYear(int startRange);
     void addPref(const Album& albumLike);
+    int getPrefNum();
 };
 
 #endif //PROJECT3_43_USER_H
