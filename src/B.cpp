@@ -29,40 +29,25 @@ B::~B() {
 
 void B::insertSong(Song* songNode) {
     string decade = getDecade(songNode->year);
-    Node* subtree = nullptr;
-    for(Node* curr : root->children) { //traverse to proper decade node and save as subtree
-        if(curr->name == decade) {
-            subtree = curr;
-        }
-    }
-    if(!subtree) return; //if decade not found, exit function
+    Node* decadeNode = findChild(root, decade); //find decade node if already exists
+    if(!decadeNode) return; //if decade not found, exit function
 
-    Node* artistNode = nullptr;
-    for(Node* curr : subtree->children) { //traverse to find if node for artist already exists
-        if(curr->name == songNode->artistName) {
-            artistNode = curr;
-        }
-    }
+    Node* artistNode = findChild(decadeNode, songNode->artistName); //find artist node if already exists
     if(!artistNode) { //if no node for the artist exists, create a new artist structure and add node
         Artist* tempArtist = new Artist;
         tempArtist->artistName = songNode->artistName;
         artistNode = new Node(tempArtist->artistName, tempArtist);
-        subtree->children.push_back(artistNode);
+        decadeNode->children.push_back(artistNode);
     }
 
-    Node* albumNode = nullptr;
-    for(Node* curr : artistNode->children) { //traverse to find if node for album already exists
-        if(curr->name == songNode->albumName) {
-            albumNode = curr;
-        }
-    }
+    Node* albumNode = findChild(artistNode, songNode->albumName); //find album node if already exits
     if(!albumNode) { //if no node for the album exists, create a new artist structure and add node
         Album* tempAlbum = new Album;
         tempAlbum->name = songNode->albumName;
         tempAlbum->artistName = songNode->artistName;
         tempAlbum->year = songNode->year;
         albumNode = new Node(tempAlbum->artistName, tempAlbum);
-        subtree->children.push_back(albumNode);
+        artistNode->children.push_back(albumNode);
     }
     
     albumNode->children.push_back(new Node(songNode->name, songNode)); //add the song to the album node's children
@@ -124,4 +109,24 @@ void B::rebalanceArtist(Node* artistNode, Album* album) {
     artistNode->artist = newArtist;
     delete temp;
      */
+}
+
+Node* B::searchAlbum(string decade, string artistName, string albumName) {
+    Node* decadeNode = findChild(root, decade); //find decade node if already exists
+    if(!decadeNode) return nullptr; //if decade not found, exit function
+
+    Node* artistNode = findChild(decadeNode, artistName); //find artist node if already exists
+    if(!artistNode) return nullptr; //if no node for the artist exists, exit function
+
+    Node* albumNode = findChild(decadeNode, albumName); //find album node, or nullptr if doesnt exist
+    return albumNode;
+}
+
+Node* B::findChild(Node* source, string name) {
+    for(Node* curr : source->children) { //traverse to if child exists and return if found
+        if(curr->name == name) {
+            return curr;
+        }
+    }
+    return nullptr; //return nullptr if child does not exist in tree
 }
