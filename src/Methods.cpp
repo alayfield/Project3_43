@@ -1,5 +1,6 @@
 
 #include "Methods.h"
+#include "B.h"
 
 using namespace std;
 

@@ -1,5 +1,6 @@
 #include <queue>
 #include "B.h"
+#include "Methods.h"
 
 using namespace std;
 

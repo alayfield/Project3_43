@@ -1,7 +1,11 @@
 #ifndef PROJECT3_43_B_H
 #define PROJECT3_43_B_H
 
-#include "Methods.h"
+#include <vector>
+
+struct Song;
+struct Album;
+struct Artist;
 
 struct Node {
     string name;

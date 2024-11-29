@@ -4,7 +4,6 @@
 #include <stack>
 #include <fstream>
 #include <map>
-#include "B.h"
 
 using namespace std;
 
@@ -12,6 +11,8 @@ using namespace std;
  * Will include algorithms (Euclidean distance)
  * I would recommend making separate files for the two data structures
  */
+
+class B;
 
 struct Song {
     string name;
@@ -56,6 +57,6 @@ void formatString(string &format);
 
 string getDecade(int year);
 
-void createDS(string filePath, B bTree);
+void createDS(string filePath, B &bTree);
 
 #endif //PROJECT3_METHODS_H
