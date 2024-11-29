@@ -16,6 +16,8 @@ using namespace std;
  */
 
 struct Song {
+    string name;
+    string artistName;
     double danceability;
     double energy;
     double speechiness;
@@ -23,7 +25,6 @@ struct Song {
     double instrumentalness;
     double valence;
     double tempo;
-    int year;
 };
 
 struct Album {
@@ -38,7 +39,7 @@ struct Album {
     double tempo;
     int year;
 
-    vector<Song> songs;
+    vector<Song*> songs;
 };
 
 struct Artist{
@@ -52,9 +53,11 @@ struct Artist{
     double valence;
     double tempo;
 
-    vector<Album> albums;
+    vector<Album*> albums;
 };
 
 void formatString(string &format);
+
+string getDecade(int year);
 
 #endif //PROJECT3_METHODS_H

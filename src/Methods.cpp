@@ -25,3 +25,10 @@ void formatString (string &format) {
     if (format.substr(0,4) == "the ")
         format = format.substr(4, format.size() - 4);
 }
+
+string getDecade(int year) {
+    if(year == 2020) return "2010";
+    string decade = to_string(year);
+    decade[4] = '0';
+    return decade;
+}
