@@ -4,6 +4,8 @@
 #include <vector>
 #include <cctype>
 #include <stack>
+#include <queue>
+#include <unordered_set>
 
 using namespace std;
 
@@ -17,43 +19,41 @@ using namespace std;
 
 struct Song {
     string name;
+    string albumName;
     string artistName;
-    double danceability;
-    double energy;
-    double speechiness;
-    double acousticness;
-    double instrumentalness;
-    double valence;
-    double tempo;
+    double danceability = 0.0;
+    double energy = 0.0;
+    double speechiness = 0.0;
+    double acousticness = 0.0;
+    double instrumentalness = 0.0;
+    double valence = 0.0;
+    double tempo = 0.0;
+    int year = 0;
 };
 
 struct Album {
     string name;
     string artistName;
-    double danceability;
-    double energy;
-    double speechiness;
-    double acousticness;
-    double instrumentalness;
-    double valence;
-    double tempo;
-    int year;
-
-    vector<Song*> songs;
+    double danceability = 0.0;
+    double energy = 0.0;
+    double speechiness = 0.0;
+    double acousticness = 0.0;
+    double instrumentalness = 0.0;
+    double valence = 0.0;
+    double tempo = 0.0;
+    int year = 0;
 };
 
 struct Artist{
     string artistName;
     string artistID;
-    double danceability;
-    double energy;
-    double speechiness;
-    double acousticness;
-    double instrumentalness;
-    double valence;
-    double tempo;
-
-    vector<Album*> albums;
+    double danceability = 0.0;
+    double energy = 0.0;
+    double speechiness = 0.0;
+    double acousticness = 0.0;
+    double instrumentalness = 0.0;
+    double valence = 0.0;
+    double tempo = 0.0;
 };
 
 void formatString(string &format);
