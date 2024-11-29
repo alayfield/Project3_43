@@ -17,7 +17,7 @@ private:
     double valence;
     double tempo;
     int year;
-    vector<Album> userPref;
+    vector<Album*> userPref;
 
 public:
     User();
@@ -26,7 +26,7 @@ public:
     static void userPrompts(int prompt);
     void displayAlbum(const Album& albumRec) const;
     void setYear(int startRange);
-    void addPref(const Album& albumLike);
+    void addPref(Album* albumLike);
     int getPrefNum();
 };
 

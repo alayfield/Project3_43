@@ -4,7 +4,6 @@
 #include "B.h"
 #include <time.h>
 #include <iostream>
-//#include <unordered_map>
 
 /* 1. Timing document:
  * https://www.ibm.com/docs/en/rdfi/9.6.0?topic=functions-clock-determine-processor-time
@@ -12,14 +11,20 @@
 
 int main() {
     // Build data structures
-    // Also create map between album id and album name
     double totalTime, treeTime, mapTime;
+    map<string, pair<string, string>> mapIDs;
+    B bDS;
+    // Map mapDS;
     User RankedRecords;
     string input;
 
+    // Adrian's Path: "/Users/adrian/Documents/COP3530/Project3_43/csv/cleaned_tracks.csv"
+
+    createDS("csv/cleaned_tracks.csv", mapIDs, bDS);
+
     while(true) {
         RankedRecords.mainMenu();
-        cin >> input;
+        getline(cin, input);
 
         if (input == "1") {
             bool year = false;
@@ -32,7 +37,7 @@ int main() {
 
             RankedRecords.surveyQs(1);
             while(!year) {
-                cin >> input;
+                getline(cin, input);
                 year = true;
 
                 if (input == "A") RankedRecords.setYear(1960);
@@ -51,11 +56,11 @@ int main() {
             RankedRecords.userPrompts(1);
             while(!pref) {
                 cout << "Album name: ";
-                cin >> album;
-                cout << "Artist name: ";
-                cin >> artist;
-
+                getline(cin, album,'\n');
                 formatString(album);
+
+                cout << "Artist name: ";
+                getline(cin, artist, '\n');
                 formatString(artist);
                 // Find album they inputted
                 // RankedRecords.addPref(treeAlbum/mapAlbum)
@@ -63,7 +68,7 @@ int main() {
                 else {
                     RankedRecords.surveyQs(3);
                     while (!yn) {
-                        cin >> input;
+                        getline(cin, input);
                         if (input == "N" || input == "No" || input == "n" || input == "no") {
                             pref = true;
                             yn = true;

@@ -73,17 +73,18 @@ void User::setYear(int startRange) {
     year = startRange;
 }
 
-void User::addPref(const Album& albumLike) {
-    userPref.emplace_back(albumLike);
+void User::addPref(Album* albumLike) {
     auto numLiked = double(userPref.size());
 
-    danceability = (danceability*(numLiked - 1) + albumLike.danceability) / numLiked;
-    energy = (energy*(numLiked - 1) + albumLike.energy) / numLiked;
-    speechiness = (speechiness*(numLiked - 1) + albumLike.speechiness) / numLiked;
-    acousticness = (acousticness*(numLiked - 1) + albumLike.acousticness) / numLiked;
-    instrumentalness = (instrumentalness*(numLiked - 1) + albumLike.instrumentalness) / numLiked;
-    valence = (valence*(numLiked - 1) + albumLike.valence) / numLiked;
-    tempo = (tempo*(numLiked - 1) + albumLike.tempo) / numLiked;
+    danceability = findAvg(danceability, numLiked,albumLike->danceability);
+    energy = findAvg(energy, numLiked,albumLike->energy);
+    speechiness = findAvg(speechiness, numLiked,albumLike->speechiness);
+    acousticness = findAvg(acousticness, numLiked,albumLike->acousticness);
+    instrumentalness = findAvg(instrumentalness, numLiked,albumLike->instrumentalness);
+    valence = findAvg(valence, numLiked,albumLike->valence);
+    tempo = findAvg(tempo, numLiked,albumLike->tempo);
+
+    userPref.emplace_back(albumLike);
 }
 
 int User::getPrefNum() {

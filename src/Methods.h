@@ -4,6 +4,7 @@
 #include <stack>
 #include <fstream>
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -55,8 +56,10 @@ struct Artist{
 
 void formatString(string &format);
 
+double findAvg(double currAvg, double currSize, double newVal);
+
 string getDecade(int year);
 
-void createDS(string filePath, B &bTree);
+void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, B& bTree);
 
 #endif //PROJECT3_METHODS_H

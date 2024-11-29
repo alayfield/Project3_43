@@ -1,4 +1,3 @@
-
 #include "Methods.h"
 #include "B.h"
 
@@ -20,12 +19,16 @@ void formatString (string &format) {
     }
 
     while (!remove.empty()){
-        format.erase(remove.top());
+        format.erase(remove.top(),1);
         remove.pop();
     }
 
     if (format.substr(0,4) == "the ")
         format = format.substr(4, format.size() - 4);
+}
+
+double findAvg(double currAvg, double currSize, double newVal) {
+    return (currAvg*currSize + newVal) / (currSize+1);
 }
 
 string getDecade(int year) {
@@ -36,12 +39,14 @@ string getDecade(int year) {
 }
 
 void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, B& bTree) {
-    string id, name, albumName, albumID, artistName, artistID;
+    string index, id, name, albumName, albumID, artistName, artistID;
     string danceability, energy, speechiness, acousticness, instrumentalness, valence, tempo, year;
 
     ifstream songs(filePath);
-    while (getline(songs, id, ',')) {
+    getline(songs, index,'\n'); // Gets rid of labels
+    while (getline(songs, index, ',')) {
 
+        getline(songs, id, ',');
         getline(songs, name, ',');
         getline(songs, albumName, ',');
         getline(songs, albumID, ',');
@@ -57,29 +62,13 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
         getline(songs, tempo, ',');
         getline(songs, year);
 
-        /*
-        newSong->danceability = stod(danceability);
-        newSong->energy = stod(energy);
-        newSong->speechiness = stod(speechiness);
-        newSong->acousticness = stod(acousticness);
-        newSong->instrumentalness = stod(instrumentalness);
-        newSong->valence = stod(valence);
-        newSong->tempo = stod(tempo);
-        newSong->year = stoi(year);
-         */
-
-
-
         if (mapIDs.count(albumID) == 0) {
             mapIDs[albumID] = make_pair(albumName, artistName);
         }
 
         formatString(albumName);
         formatString(artistName);
-
-        Song* newSong = new Song{name = name,
-                                 albumName= albumName,
-                                 artistName = artistName,
+        Song* newSong = new Song{name, albumName, artistName,
                                  stod(danceability),
                                  stod(energy),
                                  stod(speechiness),
@@ -90,5 +79,7 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
                                  stoi(year)};
 
         bTree.insertSong(newSong);
+        cout << index << ": added to tree" << endl;
+        // Insert into map
     }
 }

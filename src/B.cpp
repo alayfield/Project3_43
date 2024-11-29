@@ -72,33 +72,56 @@ void B::insertSong(Song* songNode) {
 }
 
 void B::rebalanceAlbum(Node* albumNode, Song* song) {
+    Album* albumVal = albumNode->album;
+
+    albumVal->danceability = findAvg(albumVal->danceability, double(albumNode->children.size()), song->danceability);
+    albumVal->energy = findAvg(albumVal->energy, double(albumNode->children.size()), song->energy);
+    albumVal->speechiness = findAvg(albumVal->speechiness, double(albumNode->children.size()), song->speechiness);
+    albumVal->acousticness = findAvg(albumVal->acousticness, double(albumNode->children.size()), song->acousticness);
+    albumVal->instrumentalness = findAvg(albumVal->instrumentalness, double(albumNode->children.size()), song->instrumentalness);
+    albumVal->valence = findAvg(albumVal->valence, double(albumNode->children.size()), song->valence);
+    albumVal->tempo = findAvg(albumVal->tempo, double(albumNode->children.size()), song->tempo);
+
+    /*
     Album* newAlbum = new Album;
     Album* temp = albumNode->album;
 
-    newAlbum->danceability = (temp->danceability*(albumNode->children.size()) + song->danceability) / albumNode->children.size()+1;
-    newAlbum->energy = (temp->energy*(albumNode->children.size()) + song->energy) / albumNode->children.size()+1;
-    newAlbum->speechiness = (temp->speechiness*(albumNode->children.size()) + song->speechiness) / albumNode->children.size()+1;
-    newAlbum->acousticness = (temp->acousticness*(albumNode->children.size()) + song->acousticness) / albumNode->children.size()+1;
-    newAlbum->instrumentalness = (temp->instrumentalness*(albumNode->children.size()) + song->instrumentalness) / albumNode->children.size()+1;
-    newAlbum->valence = (temp->valence*(albumNode->children.size()) + song->valence) / albumNode->children.size()+1;
-    newAlbum->tempo = (temp->tempo*(albumNode->children.size()) + song->tempo) / albumNode->children.size()+1;
+    newAlbum->danceability = (temp->danceability*(double(albumNode->children.size())) + song->danceability) / double(albumNode->children.size())+1;
+    newAlbum->energy = (temp->energy*(double(albumNode->children.size())) + song->energy) / double(albumNode->children.size())+1;
+    newAlbum->speechiness = (temp->speechiness*(double(albumNode->children.size())) + song->speechiness) / double(albumNode->children.size())+1;
+    newAlbum->acousticness = (temp->acousticness*(double(albumNode->children.size())) + song->acousticness) / double(albumNode->children.size())+1;
+    newAlbum->instrumentalness = (temp->instrumentalness*(double(albumNode->children.size())) + song->instrumentalness) / double(albumNode->children.size())+1;
+    newAlbum->valence = (temp->valence*(double(albumNode->children.size())) + song->valence) / double(albumNode->children.size())+1;
+    newAlbum->tempo = (temp->tempo*(int(albumNode->children.size())) + song->tempo) / double(albumNode->children.size())+1;
     
     albumNode->album = newAlbum;
     delete temp;
+    */
 }
 
 void B::rebalanceArtist(Node* artistNode, Album* album) {
+    Album* artistVal = artistNode->album;
+
+    artistVal->danceability = findAvg(artistVal->danceability, double(artistNode->children.size()), album->danceability);
+    artistVal->energy = findAvg(artistVal->energy, double(artistNode->children.size()), album->energy);
+    artistVal->speechiness = findAvg(artistVal->speechiness, double(artistNode->children.size()), album->speechiness);
+    artistVal->acousticness = findAvg(artistVal->acousticness, double(artistNode->children.size()), album->acousticness);
+    artistVal->instrumentalness = findAvg(artistVal->instrumentalness, double(artistNode->children.size()), album->instrumentalness);
+    artistVal->valence = findAvg(artistVal->valence, double(artistNode->children.size()), album->valence);
+    artistVal->tempo = findAvg(artistVal->tempo, double(artistNode->children.size()), album->tempo);
+    /*
     Artist* newArtist = new Artist;
     Artist* temp = artistNode->artist;
     
-    newArtist->danceability = (temp->danceability*(artistNode->children.size()) + album->danceability) / artistNode->children.size()+1;
-    newArtist->energy = (temp->energy*(artistNode->children.size()) + album->energy) / artistNode->children.size()+1;
-    newArtist->speechiness = (temp->speechiness*(artistNode->children.size()) + album->speechiness) / artistNode->children.size()+1;
-    newArtist->acousticness = (temp->acousticness*(artistNode->children.size()) + album->acousticness) / artistNode->children.size()+1;
-    newArtist->instrumentalness = (temp->instrumentalness*(artistNode->children.size()) + album->instrumentalness) / artistNode->children.size()+1;
-    newArtist->valence = (temp->valence*(artistNode->children.size()) + album->valence) / artistNode->children.size()+1;
-    newArtist->tempo = (temp->tempo*(artistNode->children.size()) + album->tempo) / artistNode->children.size()+1;
+    newArtist->danceability = (temp->danceability*(double(artistNode->children.size())) + album->danceability) / double(artistNode->children.size())+1;
+    newArtist->energy = (temp->energy*(double(artistNode->children.size())) + album->energy) / double(artistNode->children.size())+1;
+    newArtist->speechiness = (temp->speechiness*(double(artistNode->children.size())) + album->speechiness) / double(artistNode->children.size())+1;
+    newArtist->acousticness = (temp->acousticness*(double(artistNode->children.size())) + album->acousticness) / double(artistNode->children.size())+1;
+    newArtist->instrumentalness = (temp->instrumentalness*(double(artistNode->children.size())) + album->instrumentalness) / double(artistNode->children.size())+1;
+    newArtist->valence = (temp->valence*(double(artistNode->children.size())) + album->valence) / double(artistNode->children.size())+1;
+    newArtist->tempo = (temp->tempo*(double(artistNode->children.size())) + album->tempo) / double(artistNode->children.size())+1;
     
     artistNode->artist = newArtist;
     delete temp;
+     */
 }

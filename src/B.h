@@ -2,6 +2,7 @@
 #define PROJECT3_43_B_H
 
 #include <vector>
+using namespace std;
 
 struct Song;
 struct Album;
