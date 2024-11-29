@@ -5,9 +5,9 @@
 
 struct Node {
     string name;
-    Song* song;
-    Album* album;
-    Artist* artist;
+    Song* song = nullptr;
+    Album* album = nullptr;
+    Artist* artist = nullptr;
     vector<Node*> children;
     Node(const string &x) : name(x) {};
     Node(const string &x, Song* y) : name(x), song(y) {};
@@ -21,9 +21,9 @@ class B {
     public:
         B();
         ~B();
-        void insertSong(Song* song);
-        void rebalanceAlbum(Node* albumNode, Song* song);
-        void rebalanceArtist(Node* artistNode, Album* album);
+        void insertSong(Song* songNode);
+        void rebalanceAlbum(Node* albumNode, Song* songNode);
+        void rebalanceArtist(Node* artistNode, Album* albumNode);
 };
 
 #endif //PROJECT3_43_B_H

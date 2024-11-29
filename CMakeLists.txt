@@ -16,4 +16,5 @@ add_executable(Project3_43
         src/Methods.cpp
         src/Methods.h
         src/User.cpp
-        src/User.h)
+        src/User.h
+        src/B.cpp)

@@ -1,6 +1,9 @@
 #ifndef PROJECT3_43_USER_H
 #define PROJECT3_43_USER_H
 
+#include <iostream>
+#include <iomanip>
+#include <string>
 #include "Methods.h"
 
 // For each session. This stores user preferences and contains prompts/the menu
@@ -18,10 +21,10 @@ private:
 
 public:
     User();
-    void mainMenu();
-    void surveyQs(int question);
-    void userPrompts(int prompt);
-    void displayAlbum(Album albumRec);
+    static void mainMenu();
+    static void surveyQs(int question);
+    static void userPrompts(int prompt);
+    void displayAlbum(const Album& albumRec) const;
     void setYear(int startRange);
     void addPref(const Album& albumLike);
     int getPrefNum();

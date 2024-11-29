@@ -1,6 +1,5 @@
 #include "User.h"
 
-
 User::User() {
     danceability = 0;
     energy = 0;
@@ -39,7 +38,7 @@ void User::surveyQs(int question) {
 
 void User::userPrompts(int prompt) {
     if (prompt == 1) {
-        cout << "Make sure you use the correct spelling." << endl;
+        cout << "Make sure you use the correct spelling" << endl;
     }
     if (prompt == 2) {
         cout << "Please input the associated number (1-3)" << endl;
@@ -52,7 +51,7 @@ void User::userPrompts(int prompt) {
     }
 }
 
-void User::displayAlbum(Album albumRec) {
+void User::displayAlbum(const Album& albumRec) const {
     cout << "Album Found!\n" << endl;
     cout << albumRec.name << ", " << albumRec.year;
     cout << "by " << albumRec.artistName << endl;

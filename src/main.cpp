@@ -1,6 +1,7 @@
 #pragma once
 #include "Methods.h"
 #include "User.h"
+#include "B.h"
 #include <time.h>
 #include <iostream>
 //#include <unordered_map>

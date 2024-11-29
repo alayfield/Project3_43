@@ -1,16 +1,12 @@
-#include <iostream>
-#include <iomanip>
-#include <string>
-#include <vector>
-#include <cctype>
-#include <stack>
-#include <queue>
-#include <unordered_set>
-
-using namespace std;
-
 #ifndef PROJECT3_METHODS_H
 #define PROJECT3_METHODS_H
+
+#include <stack>
+#include <fstream>
+#include <map>
+#include "B.h"
+
+using namespace std;
 
 /* Includes structs to be used in both data structures
  * Will include algorithms (Euclidean distance)
@@ -59,5 +55,7 @@ struct Artist{
 void formatString(string &format);
 
 string getDecade(int year);
+
+void createDS(string filePath, B bTree);
 
 #endif //PROJECT3_METHODS_H

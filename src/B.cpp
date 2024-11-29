@@ -1,4 +1,6 @@
+#include <queue>
 #include "B.h"
+
 using namespace std;
 
 B::B() {
@@ -24,8 +26,8 @@ B::~B() {
     }
 }
 
-void B::insertSong(Song* song) {
-    string decade = getDecade(song->year);
+void B::insertSong(Song* songNode) {
+    string decade = getDecade(songNode->year);
     Node* subtree = nullptr;
     for(Node* curr : root->children) { //traverse to proper decade node and save as subtree
         if(curr->name == decade) {
@@ -36,35 +38,35 @@ void B::insertSong(Song* song) {
 
     Node* artistNode = nullptr;
     for(Node* curr : subtree->children) { //traverse to find if node for artist already exists
-        if(curr->name == song->artistName) {
+        if(curr->name == songNode->artistName) {
             artistNode = curr;
         }
     }
     if(!artistNode) { //if no node for the artist exists, create a new artist structure and add node
         Artist* tempArtist = new Artist;
-        tempArtist->artistName = song->artistName;
+        tempArtist->artistName = songNode->artistName;
         artistNode = new Node(tempArtist->artistName, tempArtist);
         subtree->children.push_back(artistNode);
     }
 
     Node* albumNode = nullptr;
     for(Node* curr : artistNode->children) { //traverse to find if node for album already exists
-        if(curr->name == song->albumName) {
+        if(curr->name == songNode->albumName) {
             albumNode = curr;
         }
     }
     if(!albumNode) { //if no node for the album exists, create a new artist structure and add node
         Album* tempAlbum = new Album;
-        tempAlbum->name = song->albumName;
-        tempAlbum->artistName = song->artistName;
-        tempAlbum->year = song->year;
+        tempAlbum->name = songNode->albumName;
+        tempAlbum->artistName = songNode->artistName;
+        tempAlbum->year = songNode->year;
         albumNode = new Node(tempAlbum->artistName, tempAlbum);
         subtree->children.push_back(albumNode);
     }
     
-    albumNode->children.push_back(new Node(song->name, song)); //add the song to the album node's children
+    albumNode->children.push_back(new Node(songNode->name, songNode)); //add the song to the album node's children
 
-    rebalanceAlbum(albumNode, song); //update the average values of all songs in the album
+    rebalanceAlbum(albumNode, songNode); //update the average values of all songs in the album
     rebalanceArtist(artistNode, albumNode->album); //update the average values of all albums from the artist
 }
 
