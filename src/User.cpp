@@ -90,3 +90,20 @@ void User::addPref(Album* albumLike) {
 int User::getPrefNum() {
     return int(userPref.size());
 }
+
+int User::getYear() {
+    return year;
+}
+
+template<typename T>
+double User::euclidDist(T *compare) {
+    double x1 = (danceability - compare->danceability)^2;
+    double x2 = (energy - compare->energy)^2;
+    double x3 = (speechiness - compare->speechiness)^2;
+    double x4 = (acousticness - compare->acousticness)^2;
+    double x5 = (instrumentalness - compare->instrumentalness)^2;
+    double x6 = (valence - compare->valence)^2;
+    double x7 = (tempo - compare->tempo)^2;
+
+    return sqrt(x1 + x2+ x3 + x4 + x5 + x6 + x7);
+}

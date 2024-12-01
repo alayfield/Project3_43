@@ -28,6 +28,10 @@ public:
     void setYear(int startRange);
     void addPref(Album* albumLike);
     int getPrefNum();
+    int getYear();
+
+    template <typename T>
+    double euclidDist(T* compared);
 };
 
 #endif //PROJECT3_43_USER_H

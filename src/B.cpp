@@ -111,7 +111,7 @@ void B::rebalanceArtist(Node* artistNode, Album* album) {
      */
 }
 
-Node* B::searchAlbum(string decade, string artistName, string albumName) {
+Album* B::searchAlbum(string decade, string artistName, string albumName) {
     Node* decadeNode = findChild(root, decade); //find decade node if already exists
     if(!decadeNode) return nullptr; //if decade not found, exit function
 
@@ -119,12 +119,12 @@ Node* B::searchAlbum(string decade, string artistName, string albumName) {
     if(!artistNode) return nullptr; //if no node for the artist exists, exit function
 
     Node* albumNode = findChild(decadeNode, albumName); //find album node, or nullptr if doesnt exist
-    return albumNode;
+    return albumNode->album;
 }
 
 Node* B::findChild(Node* source, string name) {
     for(Node* curr : source->children) { //traverse to if child exists and return if found
-        if(curr->name == name) {
+        if (curr->name == name) {
             return curr;
         }
     }

@@ -34,6 +34,7 @@ int main() {
             string artist;
             Album* treeAlbum;
             Album* mapAlbum;
+            Album* albumLike;
 
             RankedRecords.surveyQs(1);
             while(!year) {
@@ -62,8 +63,11 @@ int main() {
                 cout << "Artist name: ";
                 getline(cin, artist, '\n');
                 formatString(artist);
-                // Find album they inputted
-                // RankedRecords.addPref(treeAlbum/mapAlbum)
+
+                // Find album inputted
+                albumLike = bDS.searchAlbum(to_string(RankedRecords.getYear()), artist, album);
+                RankedRecords.addPref(albumLike);
+
                 if (RankedRecords.getPrefNum() == 0) RankedRecords.userPrompts(4);
                 else {
                     RankedRecords.surveyQs(3);
