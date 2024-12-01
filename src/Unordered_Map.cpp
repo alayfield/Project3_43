@@ -73,3 +73,39 @@ void UnorderedMap<K, V>::rehash() {
     theMap = newMap;
     bucketNum = newBucketNum;
 }
+
+template<typename K, typename V>
+bool UnorderedMap<K, V>::findIf(const K &key) {
+    // Finds the index using hash
+    int index = hash(key) % bucketNum;
+    Node<K, V> *currentNode = theMap[index];
+
+    // iterates through the adjacency list if it exists and if it finds the key it returns true
+    while(currentNode != nullptr) {
+        if(currentNode->key == key) {
+            return true;
+        }
+        currentNode = currentNode->next;
+    }
+
+    // if not found, returns false
+    return false;
+}
+
+template<typename K, typename V>
+Node<K, V> *UnorderedMap<K, V>::find(const K &key) {
+    // Finds the index using hash
+    int index = hash(key) % bucketNum;
+    Node<K, V> *currentNode = theMap[index];
+
+    // iterates through the adjacency list if it exists and if it finds the key, returns node
+    while(currentNode != nullptr) {
+        if(currentNode->key == key) {
+            return currentNode;
+        }
+        currentNode = currentNode->next;
+    }
+
+    // if not found, returns a nullptr
+    return nullptr;
+}

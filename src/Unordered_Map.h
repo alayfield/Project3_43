@@ -36,7 +36,8 @@ class UnorderedMap {
     public:
       UnorderedMap(int bucketNum = 32);
       void insert(const K& key, const V& value);
-      bool find(const K& key);
+      bool findIf(const K& key);
+      Node<K, V>* find(const K& key);
 };
 
 
