@@ -27,8 +27,10 @@ class B {
         B();
         ~B();
         void insertSong(Song* songNode);
-        void rebalanceAlbum(Node* albumNode, Song* songNode);
-        void rebalanceArtist(Node* artistNode, Album* albumNode);
+        void rebalanceTree();
+        void rebalanceTree(Node* node);
+        void rebalanceAlbum(Node* albumNode);
+        void rebalanceArtist(Node* artistNode);
         Album* searchAlbum(string decade, string artistName, string albumName);
         Node* findChild(Node* source, string name);
 };
