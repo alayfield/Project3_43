@@ -17,6 +17,7 @@ class B;
 
 struct Song {
     string name;
+    string albumID;
     string albumName;
     string artistName;
     double danceability = 0.0;
@@ -30,7 +31,8 @@ struct Song {
 };
 
 struct Album {
-    string name;
+    string albumID;
+    string albumName;
     string artistName;
     double danceability = 0.0;
     double energy = 0.0;
@@ -44,7 +46,6 @@ struct Album {
 
 struct Artist{
     string artistName;
-    string artistID;
     double danceability = 0.0;
     double energy = 0.0;
     double speechiness = 0.0;

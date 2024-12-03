@@ -9,15 +9,16 @@ template<typename K, typename V>
 UnorderedMap<K, V>::UnorderedMap(int bucketNum) : bucketNum(bucketNum), elementSize(0), theMap(bucketNum, nullptr) {
 }
 
+
 template<typename K, typename V>
 void UnorderedMap<K, V>::insert(const K &key, const V &value) {
     int index = hash(key) % bucketNum;
-    Node<K, V> currentNode = theMap[index];
+    Node<K, V> *currentNode = theMap[index];
 
     // If duplicate inserted, updates it
     while(currentNode != nullptr) {
         if(currentNode->key == key) {
-            currentNode->value = value;
+            //currentNode->value = value;
             return;
         }
         currentNode = currentNode->next;
@@ -46,17 +47,25 @@ int UnorderedMap<K, V>::hash(const K& key) {
         }
         return hash;
     }
+    else if(std::is_same<K, int>::value) {
+        //return key;
+    }
+    else if(std::is_same<K, char>::value) {
+        //return key;
+    }
     else {
         // string not inputted
-        return 0;
+        return -1;
     }
 }
+
 
 template<typename K, typename V>
 void UnorderedMap<K, V>::rehash() {
     int newBucketNum = bucketNum * 2;
     vector<Node<K, V> *> newMap(newBucketNum, nullptr);
 
+    // goes through each bucket
     for(int i = 0; i < bucketNum; i++) {
         Node<K, V> *currentNode = theMap[i];
         while(currentNode != nullptr) {
@@ -73,6 +82,7 @@ void UnorderedMap<K, V>::rehash() {
     theMap = newMap;
     bucketNum = newBucketNum;
 }
+
 
 template<typename K, typename V>
 bool UnorderedMap<K, V>::findIf(const K &key) {
@@ -108,4 +118,25 @@ Node<K, V> *UnorderedMap<K, V>::find(const K &key) {
 
     // if not found, returns a nullptr
     return nullptr;
+}
+
+void NestedMap::insert(const Song& song) {
+    // checks if artist is inputted, if not inputs
+    if (!artistMap.findIf(song.artistName)) {
+        artistMap.insert(song.artistName, UnorderedMap<std::string, UnorderedMap<std::string, Song>>());
+    }
+
+    // gets album map
+    auto& albumMap = artistMap.find(song.artistName)->value;
+
+    // checks if album inputted, if not inputs
+    if(!albumMap.findIf(song.albumName)) {
+        albumMap.insert(song.albumName, UnorderedMap<std::string, Song>());
+    }
+
+    // gets song map
+    auto& songMap = albumMap.find(song.albumName)->value;
+
+    // inserts song
+    songMap.insert(song.name, song);
 }

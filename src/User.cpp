@@ -8,13 +8,20 @@ User::User() {
     instrumentalness = 0;
     valence = 0;
     tempo = 0;
+    cout << "Welcome to Ranked Records!" << endl;
 }
 
-void User::mainMenu() {
-    cout << "Welcome to Ranked Records!\n" << endl;
-    cout << "1. Take a survey and find an album.\n"
-            "2. Learn more about our method.\n"
-            "3. Quit" << endl;
+void User::mainMenu(bool completed) {
+    if (completed) {
+        cout << "\n   --- Survey Complete ---\n"
+                "2. Learn more about our method.\n"
+                "3. Quit" << endl;
+    }
+    else {
+        cout << "\n1. Take a survey and find an album.\n"
+                "2. Learn more about our method.\n"
+                "3. Quit" << endl;
+    }
 }
 
 void User::surveyQs(int question) {
@@ -29,19 +36,47 @@ void User::surveyQs(int question) {
         cout << "Please input the associated letter (A-F)" << endl;
     }
     if (question == 2) {
-        cout << "What is your favorite album from this decade?" << endl;
+        cout << "\nWhat is your favorite album from this decade?" << endl;
     }
     if (question == 3) {
-        cout << "Would you like to add another favorite? (Y/N)\n" << endl;
+        cout << "\nWould you like to add another favorite? (Y/N)" << endl;
     }
+}
+
+void User::displayMethod() { // Information: https://rpubs.com/PeterDola/SpotifyTracks
+    cout << "Our data base is comprised of 850,000+ songs making up over 68,000 albums released between 1960 and 2021.\n"
+            "We classify albums as being 30 minutes in length or longer with the work not having more than one artist.\n"
+            "\n"
+            "In order to classify and compare albums, the year of release and 7 quantitative variables are considered;\n"
+            "danceability, energy, speechless, acousticness, instrumentalness, valence, and tempo. Individual songs hold\n"
+            "values unique to that track, album values are the averages of the track values, and artist values are the \n"
+            "averages of the album values.\n"
+            "\n"
+            "When you are asked in the survey about your favorite albums, we are getting a sense of your taste and \n"
+            "finding something similar. Specifically, we are using the Euclidean distance algorithm.\n"
+            "\n"
+            "Learn more about Euclidean distance:\n"
+            "https://www.geeksforgeeks.org/euclidean-distance/\n"
+            "\n"
+            "Understanding Spotify track data:\n"
+            "  -  Danceability: A number between 0 and 1 to indicate whether a song would be good for dancing. This is \n"
+            "     based on tempo, rhythm stability, beat strength, and regularity.\n"
+            "  -  Energy: This is a number between 0 and 1 that measures track intensity, with values closer to 1 \n"
+            "     indicating the track is fast, loud, and noisy. \n"
+            "  -  Speechiness: This detects speech on a track. This ranges between 0 and 1, but most songs will have a \n"
+            "     score below 0.33. Rap music will likely have a score between 0.33 and 0.66.\n"
+            "  -  Acousticness: A number between 0 and 1 to indicate whether a song is acoustic, with values closer to 1 \n"
+            "     indicating high chance that  the track is acoustic.\n"
+            "  -  Instrumentalness: A number between 0 and 1 to indicate if a track contains vocals. A value of 0.5 and \n"
+            "     higher indicates the track likely does not have vocals.\n"
+            "  -  Valence: This indicated the mood of the track. This is a number between 0 and 1 with a higher score \n"
+            "     indicating that the track has a positive mood.\n"
+            "  -  Tempo: This is the beats per minute (BPM). This is not used in the Euclidean distance calculation." << endl;
 }
 
 void User::userPrompts(int prompt) {
     if (prompt == 1) {
         cout << "Make sure you use the correct spelling" << endl;
-    }
-    if (prompt == 2) {
-        cout << "Please input the associated number (1-3)" << endl;
     }
     if (prompt == 3) {
         cout << "Invalid input, please try again" << endl;
@@ -51,22 +86,27 @@ void User::userPrompts(int prompt) {
     }
 }
 
-void User::displayAlbum(const Album& albumRec) const {
+void User::displayAlbum(Album* albumRec, const pair<string, string>& names) const {
+
     cout << "Album Found!\n" << endl;
-    cout << albumRec.name << ", " << albumRec.year;
-    cout << "by " << albumRec.artistName << endl;
+    cout << names.first << ", " << albumRec->year << endl;
+    cout << "by " << names.second << endl;
     cout << "\n";
 
     cout << "Relevant Stats  | Album Stats    | User Preference" << endl; // 16 characters between "|"
     cout << "--------------------------------------------------" << endl;
-    cout << setprecision(4);
-    cout << "danceability    | " << albumRec.danceability << "         | " << danceability << endl;
-    cout << "energy          | " <<  albumRec.energy << "         | " << energy << endl;
-    cout << "speechiness     | " <<  albumRec.speechiness << "         | " << speechiness << endl;
-    cout << "acousticness    | " <<  albumRec.acousticness << "         | " << acousticness << endl;
-    cout << "instumentalness | " <<  albumRec.instrumentalness << "         | " << instrumentalness << endl;
-    cout << "valence         | " <<  albumRec.valence << "         | " << valence << endl;
-    cout << "tempo           | " <<  albumRec.tempo << "         | " << tempo << endl;
+    cout << fixed << setprecision(4);
+    cout << "danceability    | " << albumRec->danceability << "         | " << danceability << endl;
+    cout << "energy          | " <<  albumRec->energy << "         | " << energy << endl;
+    cout << "speechiness     | " <<  albumRec->speechiness << "         | " << speechiness << endl;
+    cout << "acousticness    | " <<  albumRec->acousticness << "         | " << acousticness << endl;
+    cout << "instumentalness | " <<  albumRec->instrumentalness << "         | " << instrumentalness << endl;
+    cout << "valence         | " <<  albumRec->valence << "         | " << valence << endl;
+    cout << setprecision(2);
+    cout << "tempo           | " <<  albumRec->tempo << "         | " << tempo << endl;
+
+    cout << "\nSpotify link:" << endl;
+    cout << "https://open.spotify.com/album/" << albumRec->albumID.substr(1, 22) << endl;
 }
 
 void User::setYear(int startRange) {
@@ -95,15 +135,6 @@ int User::getYear() {
     return year;
 }
 
-template<typename T>
-double User::euclidDist(T *compare) {
-    double x1 = (danceability - compare->danceability)^2;
-    double x2 = (energy - compare->energy)^2;
-    double x3 = (speechiness - compare->speechiness)^2;
-    double x4 = (acousticness - compare->acousticness)^2;
-    double x5 = (instrumentalness - compare->instrumentalness)^2;
-    double x6 = (valence - compare->valence)^2;
-    double x7 = (tempo - compare->tempo)^2;
-
-    return sqrt(x1 + x2+ x3 + x4 + x5 + x6 + x7);
+vector<double> User::getData() {
+    return {danceability, energy, speechiness, acousticness, instrumentalness, valence, tempo};
 }

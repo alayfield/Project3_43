@@ -33,13 +33,20 @@ class UnorderedMap {
     int hash(const K& key);
     void rehash();
 
-    public:
-      UnorderedMap(int bucketNum = 32);
-      void insert(const K& key, const V& value);
-      bool findIf(const K& key);
-      Node<K, V>* find(const K& key);
+public:
+    UnorderedMap(int bucketNum = 32);
+    void insert(const K& key, const V& value);
+    bool findIf(const K& key);
+    Node<K, V>* find(const K& key);
+
 };
 
 
+struct NestedMap {
+    // Artist Name -> Album -> Song
+    UnorderedMap<std::string, UnorderedMap<std::string, UnorderedMap<std::string, Song>>> artistMap;
+
+    void insert(const Song& song);
+};
 
 #endif //UNORDERED_MAP_H

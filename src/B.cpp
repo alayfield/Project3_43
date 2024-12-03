@@ -38,91 +38,85 @@ void B::insertSong(Song* songNode) {
         tempArtist->artistName = songNode->artistName;
         artistNode = new Node(tempArtist->artistName, tempArtist);
         decadeNode->children.push_back(artistNode);
+        cout << "created artist " << tempArtist->artistName << endl;
     }
 
     Node* albumNode = findChild(artistNode, songNode->albumName); //find album node if already exits
     if(!albumNode) { //if no node for the album exists, create a new artist structure and add node
         Album* tempAlbum = new Album;
-        tempAlbum->name = songNode->albumName;
+        tempAlbum->albumID = songNode->albumID;
+        tempAlbum->albumName = songNode->albumName;
         tempAlbum->artistName = songNode->artistName;
         tempAlbum->year = songNode->year;
-        albumNode = new Node(tempAlbum->artistName, tempAlbum);
+        albumNode = new Node(tempAlbum->albumName, tempAlbum);
         artistNode->children.push_back(albumNode);
+        cout << "created album " << tempAlbum->albumName << endl;
     }
     
     albumNode->children.push_back(new Node(songNode->name, songNode)); //add the song to the album node's children
+    rebalanceAlbum(albumNode, songNode);
 }
 
 void B::rebalanceTree() {
-    rebalanceTree(root);
-}
-
-void B::rebalanceTree(Node* node) {
-    if(!node) return; //if node doesnt exist, exit to avoid segfault
-    if(node->album) { //if node is an album node, rebalance it and dont push children, as song nodes dont need to be rebalanced
-        rebalanceAlbum(node);
-    }
-    else if(node->children.size() != 0) { //otherwise, push all children to function
-        for(Node* child : node->children) {
-            rebalanceTree(child);
-        }
-    }
-
-    if(node->artist) { //if node is an artist node, rebalance the artist. Its children should still be pushed as albums mustbe rebalanced
-        rebalanceArtist(node); //artist node should be rebalanced at the end, as it should be rebalanced after albums are rebalanced
+    for (auto decade : root->children) {
+        rebalanceDecade(decade);
     }
 }
 
-void B::rebalanceAlbum(Node* albumNode) {
-    double danceability, energy, speechiness, acousticness, instrumentalness, valence, tempo;
-    int size = albumNode->children.size();
-    for(Node* child : albumNode->children) {
-        danceability += child->song->danceability;
-        energy += child->song->energy;
-        speechiness += child->song->speechiness;
-        acousticness += child->song->acousticness;
-        instrumentalness += child->song->instrumentalness;
-        valence += child->song->valence;
-        tempo += child->song->tempo;
+void B::rebalanceDecade(Node* decade) {
+    if(!decade) return; //if node doesnt exist, exit to avoid segfault
+    for (auto artist : decade->children) {
+        rebalanceArtist(artist);
     }
-    albumNode->album->danceability = danceability/size;
-    albumNode->album->energy = energy/size;
-    albumNode->album->speechiness = speechiness/size;
-    albumNode->album->acousticness = acousticness/size;
-    albumNode->album->instrumentalness = instrumentalness/size;
-    albumNode->album->valence = valence/size;
-    albumNode->album->tempo = tempo/size;
+}
+
+void B::rebalanceAlbum(Node* albumNode, Song* song) {
+    Album* albumVal = albumNode->album;
+
+    albumVal->danceability = findAvg(albumVal->danceability, double(albumNode->children.size()), song->danceability);
+    albumVal->energy = findAvg(albumVal->energy, double(albumNode->children.size()), song->energy);
+    albumVal->speechiness = findAvg(albumVal->speechiness, double(albumNode->children.size()), song->speechiness);
+    albumVal->acousticness = findAvg(albumVal->acousticness, double(albumNode->children.size()), song->acousticness);
+    albumVal->instrumentalness = findAvg(albumVal->instrumentalness, double(albumNode->children.size()), song->instrumentalness);
+    albumVal->valence = findAvg(albumVal->valence, double(albumNode->children.size()), song->valence);
+    albumVal->tempo = findAvg(albumVal->tempo, double(albumNode->children.size()), song->tempo);
 }
 
 void B::rebalanceArtist(Node* artistNode) {
-    double danceability, energy, speechiness, acousticness, instrumentalness, valence, tempo;
-    int size = artistNode->children.size();
+    Artist* artistVal = artistNode->artist;
+    auto size = double(artistNode->children.size());
     for(Node* child : artistNode->children) {
-        danceability += child->album->danceability;
-        energy += child->album->energy;
-        speechiness += child->album->speechiness;
-        acousticness += child->album->acousticness;
-        instrumentalness += child->album->instrumentalness;
-        valence += child->album->valence;
-        tempo += child->album->tempo;
+        artistVal->danceability += child->album->danceability;
+        artistVal->energy += child->album->energy;
+        artistVal->speechiness += child->album->speechiness;
+        artistVal->acousticness += child->album->acousticness;
+        artistVal->instrumentalness += child->album->instrumentalness;
+        artistVal->valence += child->album->valence;
+        artistVal->tempo += child->album->tempo;
     }
-    artistNode->artist->danceability = danceability/size;
-    artistNode->artist->energy = energy/size;
-    artistNode->artist->speechiness = speechiness/size;
-    artistNode->artist->acousticness = acousticness/size;
-    artistNode->artist->instrumentalness = instrumentalness/size;
-    artistNode->artist->valence = valence/size;
-    artistNode->artist->tempo = tempo/size;
+    artistVal->danceability /= size;
+    artistVal->energy /= size;
+    artistVal->speechiness /= size;
+    artistVal->acousticness /= size;
+    artistVal->instrumentalness /= size;
+    artistVal->valence /= size;
+    artistVal->tempo /= size;
 }
 
 Album* B::searchAlbum(string decade, string artistName, string albumName) {
     Node* decadeNode = findChild(root, decade); //find decade node if already exists
-    if(!decadeNode) return nullptr; //if decade not found, exit function
+    if(!decadeNode) {
+        cout << "decade not found" << endl;
+        return nullptr; //if decade not found, exit function
+    }
 
     Node* artistNode = findChild(decadeNode, artistName); //find artist node if already exists
-    if(!artistNode) return nullptr; //if no node for the artist exists, exit function
+    if(!artistNode) {
+        cout << "artist not found" << endl;
+        return nullptr; //if no node for the artist exists, exit function
+    }
 
-    Node* albumNode = findChild(decadeNode, albumName); //find album node, or nullptr if doesnt exist
+    Node* albumNode = findChild(artistNode, albumName); //find album node, or nullptr if doesnt exist
     return albumNode->album;
 }
 
@@ -134,3 +128,39 @@ Node* B::findChild(Node* source, string name) {
     }
     return nullptr; //return nullptr if child does not exist in tree
 }
+
+Album* B::euclidDist(string decade, vector<double> userVals) {
+    double x1, x2, x3, x4, x5, x6, x7;
+    double minED = 999999999;
+    double currED = 0;
+    Node* bestArtist = nullptr;
+    Album* bestAlbum = nullptr;
+    Node* decadeNode = findChild(root, decade);
+
+    for (auto artist : decadeNode->children) {
+        x1 = pow(artist->artist->danceability - userVals[0], 2);
+        x2 = pow(artist->artist->energy - userVals[1], 2);
+        x3 = pow(artist->artist->speechiness - userVals[2], 2);
+        x4 = pow(artist->artist->acousticness - userVals[3], 2);
+        x5 = pow(artist->artist->instrumentalness - userVals[4], 2);
+        x6 = pow(artist->artist->valence - userVals[5], 2);
+        //x7 = pow(artist->artist->tempo - userVals[6], 2);
+
+        currED = sqrt(x1 + x2+ x3 + x4 + x5 + x6);
+        if (currED < minED) bestArtist = artist;
+    }
+
+    for (auto album : bestArtist->children) {
+        x1 = pow(album->album->danceability - userVals[0], 2);
+        x2 = pow(album->album->energy - userVals[1], 2);
+        x3 = pow(album->album->speechiness - userVals[2], 2);
+        x4 = pow(album->album->acousticness - userVals[3], 2);
+        x5 = pow(album->album->instrumentalness - userVals[4], 2);
+        x6 = pow(album->album->valence - userVals[5], 2);
+        //x7 = pow(album->album->tempo - userVals[6], 2);
+
+        currED = sqrt(x1 + x2+ x3 + x4 + x5 + x6);
+        if (currED < minED) bestAlbum = album->album;
+    }
+    return bestAlbum;
+};

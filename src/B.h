@@ -28,11 +28,13 @@ class B {
         ~B();
         void insertSong(Song* songNode);
         void rebalanceTree();
-        void rebalanceTree(Node* node);
-        void rebalanceAlbum(Node* albumNode);
+        void rebalanceDecade(Node* node);
         void rebalanceArtist(Node* artistNode);
+        void rebalanceAlbum(Node* albumNode, Song* song);
         Album* searchAlbum(string decade, string artistName, string albumName);
         Node* findChild(Node* source, string name);
+
+        Album* euclidDist(string decade, vector<double> userVals);
 };
 
 #endif //PROJECT3_43_B_H

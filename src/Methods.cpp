@@ -33,8 +33,8 @@ double findAvg(double currAvg, double currSize, double newVal) {
 
 string getDecade(int year) {
     if(year >= 2010) return "2010";
+    year = year - year % 10;
     string decade = to_string(year);
-    decade[4] = '0';
     return decade;
 }
 
@@ -44,8 +44,7 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
 
     ifstream songs(filePath);
     getline(songs, index,'\n'); // Gets rid of labels
-    while (getline(songs, index, ',')) {
-
+    while (getline(songs, index, ',') && index.size() < 8) { // && index.size() < 8
         getline(songs, id, ',');
         getline(songs, name, ',');
         getline(songs, albumName, ',');
@@ -68,7 +67,7 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
 
         formatString(albumName);
         formatString(artistName);
-        Song* newSong = new Song{name, albumName, artistName,
+        Song* newSong = new Song{name, albumID, albumName, artistName,
                                  stod(danceability),
                                  stod(energy),
                                  stod(speechiness),
@@ -79,7 +78,8 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
                                  stoi(year)};
 
         bTree.insertSong(newSong);
-        cout << index << ": added to tree" << endl;
+        //cout << index << ": added to tree" << endl;
         // Insert into map
     }
+    bTree.rebalanceTree();
 }

@@ -13,20 +13,22 @@ int main() {
     // Build data structures
     double totalTime, treeTime, mapTime;
     map<string, pair<string, string>> mapIDs;
+    pair<string, string> foundNames;
     B bDS;
     // Map mapDS;
     User RankedRecords;
     string input;
+    bool survey = false;
 
     // Adrian's Path: "/Users/adrian/Documents/COP3530/Project3_43/csv/cleaned_tracks.csv"
 
     createDS("csv/cleaned_tracks.csv", mapIDs, bDS);
 
     while(true) {
-        RankedRecords.mainMenu();
+        RankedRecords.mainMenu(survey);
         getline(cin, input);
 
-        if (input == "1") {
+        if (input == "1" && !survey) {
             bool year = false;
             bool pref = false;
             bool yn = false;
@@ -41,12 +43,12 @@ int main() {
                 getline(cin, input);
                 year = true;
 
-                if (input == "A") RankedRecords.setYear(1960);
-                else if (input == "B") RankedRecords.setYear(1970);
-                else if (input == "C") RankedRecords.setYear(1980);
-                else if (input == "D") RankedRecords.setYear(1990);
-                else if (input == "E") RankedRecords.setYear(2000);
-                else if (input == "F") RankedRecords.setYear(2010);
+                if (toupper(input[0]) == 'A') RankedRecords.setYear(1960);
+                else if (toupper(input[0]) == 'B') RankedRecords.setYear(1970);
+                else if (toupper(input[0]) == 'C') RankedRecords.setYear(1980);
+                else if (toupper(input[0]) == 'D') RankedRecords.setYear(1990);
+                else if (toupper(input[0]) == 'E') RankedRecords.setYear(2000);
+                else if (toupper(input[0]) == 'F') RankedRecords.setYear(2010);
                 else {
                     RankedRecords.userPrompts(3);
                     year = false;
@@ -66,8 +68,8 @@ int main() {
 
                 // Find album inputted
                 albumLike = bDS.searchAlbum(to_string(RankedRecords.getYear()), artist, album);
-                RankedRecords.addPref(albumLike);
 
+                if (albumLike != nullptr) RankedRecords.addPref(albumLike);
                 if (RankedRecords.getPrefNum() == 0) RankedRecords.userPrompts(4);
                 else {
                     RankedRecords.surveyQs(3);
@@ -84,24 +86,31 @@ int main() {
                     }
                 }
             }
-            cout << "Survey complete! Finding album..." << endl;
+            cout << "\nSurvey complete! Finding album..." << endl;
             totalTime = double(clock()); // 1
-            // Find album in tree
+            treeAlbum = bDS.euclidDist(to_string(RankedRecords.getYear()),RankedRecords.getData());
             treeTime = double(clock()) - totalTime;
             // Find album in map
             mapTime = double(clock()) - totalTime - treeTime;
 
-            //RankedRecords.displayAlbum(treeAlbum/mapAlbum)
-            cout << "Time to find in tree: " << treeTime << endl;
+            foundNames = mapIDs[treeAlbum->albumID];
+            RankedRecords.displayAlbum(treeAlbum, foundNames);
+            cout << "\nTime to find in tree: " << treeTime << endl;
             cout << "Time to find in map: " << mapTime << endl;
+
+            survey = true;
         }
 
-        if (input == "2") {
-            // Return information on Spotify stats
+        else if (input == "2") {
+            RankedRecords.displayMethod();
         }
 
-        if (input == "3") {
+        else if (input == "3") {
             return 0;
+        }
+
+        else {
+            RankedRecords.userPrompts(3);
         }
     }
 }

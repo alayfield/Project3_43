@@ -21,17 +21,16 @@ private:
 
 public:
     User();
-    static void mainMenu();
+    static void mainMenu(bool completed);
     static void surveyQs(int question);
+    static void displayMethod();
     static void userPrompts(int prompt);
-    void displayAlbum(const Album& albumRec) const;
+    void displayAlbum(Album* albumRec, const pair<string, string>& names) const;
     void setYear(int startRange);
     void addPref(Album* albumLike);
     int getPrefNum();
     int getYear();
-
-    template <typename T>
-    double euclidDist(T* compared);
+    vector<double> getData();
 };
 
 #endif //PROJECT3_43_USER_H
