@@ -4,7 +4,7 @@ library(MASS)
 
 dat <- read.csv("csv/tracks_features.csv")
 
-## Removing unecessary data
+## Removing unnecessary data
 remove <- c("track_number", "disc_number", "explicit", "time_signature", 
             "key", "mode", "release_date", "loudness", "liveness")
 dat <- dat[,!(names(dat) %in% remove)]
