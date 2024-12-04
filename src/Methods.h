@@ -9,8 +9,7 @@
 using namespace std;
 
 /* Includes structs to be used in both data structures
- * Will include algorithms (Euclidean distance)
- * I would recommend making separate files for the two data structures
+ * Include algorithms to be used by both data structures
  */
 
 class B;

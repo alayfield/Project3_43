@@ -1,12 +1,10 @@
 #ifndef PROJECT3_43_B_H
 #define PROJECT3_43_B_H
 
+#include <utility>
 #include <vector>
+#include "Methods.h"
 using namespace std;
-
-struct Song;
-struct Album;
-struct Artist;
 
 struct treeNode {
     string name;
@@ -14,26 +12,26 @@ struct treeNode {
     Album* album = nullptr;
     Artist* artist = nullptr;
     vector<treeNode*> children;
-    treeNode(const string &x) : name(x) {};
-    treeNode(const string &x, Song* y) : name(x), song(y) {};
-    treeNode(const string &x, Album* y) : name(x), album(y) {};
-    treeNode(const string &x, Artist* y) : name(x), artist(y) {};
+    treeNode(string x) : name(std::move(x)) {};
+    treeNode(string x, Song* y) : name(std::move(x)), song(y) {};
+    treeNode(string x, Album* y) : name(std::move(x)), album(y) {};
+    treeNode(string x, Artist* y) : name(std::move(x)), artist(y) {};
 };
 
 class B {
     private:
         treeNode* root;
+        void rebalanceDecade(treeNode* node);
+        void rebalanceArtist(treeNode* artistNode);
+        void rebalanceAlbum(treeNode* albumNode, Song* song);
+
     public:
         B();
         ~B();
         void insertSong(Song* songNode);
         void rebalanceTree();
-        void rebalanceDecade(treeNode* node);
-        void rebalanceArtist(treeNode* artistNode);
-        void rebalanceAlbum(treeNode* albumNode, Song* song);
         Album* searchAlbum(string decade, string artistName, string albumName);
         treeNode* findChild(treeNode* source, string name);
-
         Album* euclidDist(string decade, vector<double> userVals);
 };
 

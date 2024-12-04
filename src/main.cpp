@@ -7,6 +7,8 @@
 
 /* 1. Timing document:
  * https://www.ibm.com/docs/en/rdfi/9.6.0?topic=functions-clock-determine-processor-time
+ * 2. To upper:
+ * https://cplusplus.com/reference/cctype/toupper/
  */
 
 int main() {
@@ -20,9 +22,7 @@ int main() {
     string input;
     bool survey = false;
 
-    // Adrian's Path: "/Users/adrian/Documents/COP3530/Project3_43/csv/cleaned_tracks.csv"
-
-    createDS("csv/cleaned_tracks.csv", mapIDs, bDS);
+    createDS("../csv/cleaned_tracks.csv", mapIDs, bDS);
 
     while(true) {
         RankedRecords.mainMenu(survey);
@@ -31,7 +31,7 @@ int main() {
         if (input == "1" && !survey) {
             bool year = false;
             bool pref = false;
-            bool yn = false;
+            bool yn;
             string album;
             string artist;
             Album* treeAlbum;
@@ -43,7 +43,7 @@ int main() {
                 getline(cin, input);
                 year = true;
 
-                if (toupper(input[0]) == 'A') RankedRecords.setYear(1960);
+                if (toupper(input[0]) == 'A') RankedRecords.setYear(1960);      // 2
                 else if (toupper(input[0]) == 'B') RankedRecords.setYear(1970);
                 else if (toupper(input[0]) == 'C') RankedRecords.setYear(1980);
                 else if (toupper(input[0]) == 'D') RankedRecords.setYear(1990);
@@ -70,9 +70,11 @@ int main() {
                 albumLike = bDS.searchAlbum(to_string(RankedRecords.getYear()), artist, album);
 
                 if (albumLike != nullptr) RankedRecords.addPref(albumLike);
-                if (RankedRecords.getPrefNum() == 0) RankedRecords.userPrompts(4);
+                if (albumLike == nullptr) cout << "\nAlbum not found." << endl;
+                if (RankedRecords.getPrefNum() == 0) RankedRecords.userPrompts(2);
                 else {
                     RankedRecords.surveyQs(3);
+                    yn = false;
                     while (!yn) {
                         getline(cin, input);
                         if (input == "N" || input == "No" || input == "n" || input == "no") {
@@ -101,15 +103,15 @@ int main() {
             survey = true;
         }
 
-        else if (input == "2") {
+        else if (input == "2") { // Display more information on what Ranked Records is doing
             RankedRecords.displayMethod();
         }
 
-        else if (input == "3") {
+        else if (input == "3") { // Exit
             return 0;
         }
 
-        else {
+        else { // Invalid entry, prompts to try again
             RankedRecords.userPrompts(3);
         }
     }
