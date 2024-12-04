@@ -186,7 +186,7 @@ Album* B::euclidDist(string decade, vector<double> userVals) {
     return bestAlbum;
 }
 
-Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double>> corrMatrix) {
+Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double> > corrMatrix) {
     /* Traverses entire decade subtree to find similar album based on Mahalanobis distance.
      * First finds most similar artist to user preference, then most similar album of that artist.
      */

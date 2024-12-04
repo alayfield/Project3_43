@@ -17,7 +17,7 @@
 int main() {
     // Build data structure
     double totalTime, euclidTime, mahaTime;
-    map<string, pair<string, string>> mapIDs;
+    map<string, pair<string, string> > mapIDs;
     pair<string, string> foundNames1;
     pair<string, string> foundNames2;
     B bDS;
@@ -26,7 +26,7 @@ int main() {
     bool survey = false;
 
     createDS("../csv/cleaned_tracks.csv", mapIDs, bDS);
-    vector<vector<double>> covMatrix = readCov("../csv/cov_matrix.csv");
+    vector<vector<double> > covMatrix = readCov("../csv/cov_matrix.csv");
 
     while(true) {
         User::mainMenu(survey); // 4

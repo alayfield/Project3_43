@@ -48,7 +48,7 @@ string getDecade(int year) {
     return decade;
 }
 
-void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, B& bTree) { // 3
+void createDS(const string& filePath, map<string,pair<string, string> >& mapIDs, B& bTree) { // 3
     /* Loads in data to tree and map data structures */
 
     string index, id, name, albumName, albumID, artistName, artistID;
@@ -105,9 +105,9 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
     songs.close();
 }
 
-vector<vector<double>> readCov(const string& filePath) {
+vector<vector<double> > readCov(const string& filePath) {
     /* Reads in the inverse correlation matrix */
-    vector<vector<double>> corrMatrix(6, vector<double>(6));
+    vector<vector<double> > corrMatrix(6, vector<double>(6));
     string currVal;
 
     ifstream cov(filePath); // Open file

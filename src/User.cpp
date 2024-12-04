@@ -89,7 +89,7 @@ void User::displayMethod() { // 1
             "     higher indicates the track likely does not have vocals.\n"
             "  -  Valence: This indicated the mood of the track. This is a number between 0 and 1 with a higher score \n"
             "     indicating that the track has a positive mood.\n"
-            "  -  Tempo: This is the beats per minute (BPM). This is not used in the Euclidean distance calculation.\n"
+            "  -  Tempo: This is the beats per minute (BPM). This is not used in the distance calculations.\n"
             "\n"
             "Information from https://rpubs.com/PeterDola/SpotifyTracks" << endl;
 }
@@ -183,6 +183,7 @@ void User::addPref(Album* albumLike) {
 }
 
 void User::resetPref() {
+    /* Resets values for user to take the survey again */
     danceability = 0;
     energy = 0;
     speechiness = 0;
