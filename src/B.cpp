@@ -114,7 +114,7 @@ void B::rebalanceAlbum(treeNode* albumNode, Song* song) {
     albumVal->tempo = findAvg(albumVal->tempo, double(albumNode->children.size()), song->tempo);
 }
 
-Album* B::searchAlbum(string decade, string artistName, string albumName) {
+Album* B::searchAlbum(const string& decade, string artistName, string albumName) {
     /* Searches tree for specified album (based on string) */
     treeNode* decadeNode = findChild(root, decade);    // Find decade node if it exists
     if(!decadeNode) return nullptr;                                 // If decade not found, exit function
@@ -128,7 +128,7 @@ Album* B::searchAlbum(string decade, string artistName, string albumName) {
     return albumNode->album;
 }
 
-treeNode* B::findChild(treeNode* source, string name) {
+treeNode* B::findChild(treeNode* source, const string& name) {
     /* Searches through node's children to find specific child */
     for(treeNode* curr : source->children) {
         if (curr->name == name) {
@@ -138,13 +138,13 @@ treeNode* B::findChild(treeNode* source, string name) {
     return nullptr; //return nullptr if child does not exist
 }
 
-Album* B::euclidDist(string decade, vector<double> userVals) {
+Album* B::euclidDist(const string& decade, vector<double> userVals) {
     /* Traverses entire decade subtree to find similar album based on Euclidean distance.
      * First finds most similar artist to user preference, then most similar album of that artist.
      */
-    double x1, x2, x3, x4, x5, x6, x7;
+    double x1, x2, x3, x4, x5, x6;
     double minED = 999999999;
-    double currED = 0;
+    double currED;
     treeNode *bestArtist = nullptr;
     Album *bestAlbum = nullptr;
     treeNode *decadeNode = findChild(root, decade);
@@ -166,7 +166,6 @@ Album* B::euclidDist(string decade, vector<double> userVals) {
     }
 
     minED = 999999999;
-    currED = 0;
 
     // Traversing through all albums under most similar artists and calculates Euclidean distance
     for (auto album: bestArtist->children) {
@@ -186,7 +185,7 @@ Album* B::euclidDist(string decade, vector<double> userVals) {
     return bestAlbum;
 }
 
-Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double> > corrMatrix) {
+Album* B::mahaDist(const string& decade, vector<double> userVals, vector<vector<double> > covMatrix) {
     /* Traverses entire decade subtree to find similar album based on Mahalanobis distance.
      * First finds most similar artist to user preference, then most similar album of that artist.
      */
@@ -212,7 +211,7 @@ Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double>
         for (int j=0; j < 6; j++) {
             curr = 0;
             for (int i=0; i < 6; i++) {
-                curr += diff[i] * corrMatrix[i][j];
+                curr += diff[i] * covMatrix[i][j];
             }
             currMD += curr * diff[j];
         }
@@ -239,7 +238,7 @@ Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double>
         for (int j=0; j < 6; j++) {
             curr = 0;
             for (int i=0; i < 6; i++) {
-                curr += diff[i] * corrMatrix[i][j];
+                curr += diff[i] * covMatrix[i][j];
             }
             currMD += curr * diff[j];
         }

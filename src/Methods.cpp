@@ -63,7 +63,7 @@ void createDS(const string& filePath, map<string,pair<string, string> >& mapIDs,
     }
 
     getline(songs, index,'\n'); // Gets rid of labels
-    while (getline(songs, index, ',') && index.size() < 8) { // && index.size() < 8
+    while (getline(songs, index, ',')) { // && index.size() < 8
         // Parsing csv for information
         getline(songs, id, ',');
         getline(songs, name, ',');
@@ -106,8 +106,8 @@ void createDS(const string& filePath, map<string,pair<string, string> >& mapIDs,
 }
 
 vector<vector<double> > readCov(const string& filePath) {
-    /* Reads in the inverse correlation matrix */
-    vector<vector<double> > corrMatrix(6, vector<double>(6));
+    /* Reads in the inverse covariance matrix */
+    vector<vector<double> > covMatrix(6, vector<double>(6));
     string currVal;
 
     ifstream cov(filePath); // Open file
@@ -122,11 +122,11 @@ vector<vector<double> > readCov(const string& filePath) {
         (getline(cov, currVal, ',')); // Gets rid of labels
         for (int j=0; j < 5; j++) {
             getline(cov, currVal, ',');
-            corrMatrix[i][j] = stod(currVal);
+            covMatrix[i][j] = stod(currVal);
         }
         getline(cov, currVal, '\n');
-        corrMatrix[i][5] = stod(currVal);
+        covMatrix[i][5] = stod(currVal);
     }
     cov.close();
-    return corrMatrix;
+    return covMatrix;
 }

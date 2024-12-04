@@ -12,7 +12,7 @@ struct treeNode {
     Album* album = nullptr;
     Artist* artist = nullptr;
     vector<treeNode*> children;
-    treeNode(string x) : name(std::move(x)) {};
+    explicit treeNode(string x) : name(std::move(x)) {};
     treeNode(string x, Song* y) : name(std::move(x)), song(y) {};
     treeNode(string x, Album* y) : name(std::move(x)), album(y) {};
     treeNode(string x, Artist* y) : name(std::move(x)), artist(y) {};
@@ -30,10 +30,10 @@ class B {
         ~B();
         void insertSong(Song* songNode);
         void rebalanceTree();
-        Album* searchAlbum(string decade, string artistName, string albumName);
-        treeNode* findChild(treeNode* source, string name);
-        Album* euclidDist(string decade, vector<double> userVals);
-        Album* mahaDist(string decade, vector<double> userVals, vector<vector<double> > corrMatrix);
+        Album* searchAlbum(const string& decade, string artistName, string albumName);
+        treeNode* findChild(treeNode* source, const string& name);
+        Album* euclidDist(const string& decade, vector<double> userVals);
+        Album* mahaDist(const string& decade, vector<double> userVals, vector<vector<double> > covMatrix);
 };
 
 #endif //PROJECT3_43_B_H
