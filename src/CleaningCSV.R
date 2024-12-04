@@ -44,5 +44,19 @@ for (i in 1:4) {
   dat$artist_ids <- gsub(subfrom[i], subto[i], dat$artist_ids)
 }
 
+## Remove compilation albums
+albumCount <- count(dat, album_id, artists)
+allAlbums <- names(table(albumCount$album_id))
+
+soloAlbum <- allAlbums[table(albumCount$album_id) == 1]
+length(soloAlbum)
+
+dat <- dat[which(dat2$album_id %in% soloAlbum),]
+
+## Removed commas in strings
+dat$name <- gsub(",", "", dat$name)
+dat$album <- gsub(",", "", dat$album)
+dat$artists <- gsub(",", "", dat$artists)
+
 ## Write to new CSV
 write.csv(dat,file="csv/cleaned_tracks.csv")

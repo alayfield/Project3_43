@@ -16,12 +16,12 @@
 
 // What a generic node for an unordered map
 template <typename K, typename V>
-struct Node {
+struct mapNode {
     K key;
     V value;
-    Node* next;
+    mapNode* next;
 
-    Node(const K& k, const V& v) : key(k), value(v), next(nullptr) {}
+    mapNode(const K& k, const V& v) : key(k), value(v), next(nullptr) {}
 };
 
 // Generic templates for the key and value
@@ -30,14 +30,14 @@ class UnorderedMap {
     const float load_factor = .80;
     int elementSize;
     int bucketNum;
-    std::vector<Node<K, V>*> theMap;
+    std::vector<mapNode<K, V>*> theMap;
     void rehash();
 
     public:
       UnorderedMap(int bucketNum = 32);
       void insert(const K& key, const V& value);
       bool findIf(const K& key);
-      Node<K, V>* find(const K& key);
+      mapNode<K, V>* find(const K& key);
       unsigned int hash(K key);
 
 };

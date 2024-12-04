@@ -8,31 +8,31 @@ struct Song;
 struct Album;
 struct Artist;
 
-struct Node {
+struct treeNode {
     string name;
     Song* song = nullptr;
     Album* album = nullptr;
     Artist* artist = nullptr;
-    vector<Node*> children;
-    Node(const string &x) : name(x) {};
-    Node(const string &x, Song* y) : name(x), song(y) {};
-    Node(const string &x, Album* y) : name(x), album(y) {};
-    Node(const string &x, Artist* y) : name(x), artist(y) {};
+    vector<treeNode*> children;
+    treeNode(const string &x) : name(x) {};
+    treeNode(const string &x, Song* y) : name(x), song(y) {};
+    treeNode(const string &x, Album* y) : name(x), album(y) {};
+    treeNode(const string &x, Artist* y) : name(x), artist(y) {};
 };
 
 class B {
     private:
-        Node* root;
+        treeNode* root;
     public:
         B();
         ~B();
         void insertSong(Song* songNode);
         void rebalanceTree();
-        void rebalanceDecade(Node* node);
-        void rebalanceArtist(Node* artistNode);
-        void rebalanceAlbum(Node* albumNode, Song* song);
+        void rebalanceDecade(treeNode* node);
+        void rebalanceArtist(treeNode* artistNode);
+        void rebalanceAlbum(treeNode* albumNode, Song* song);
         Album* searchAlbum(string decade, string artistName, string albumName);
-        Node* findChild(Node* source, string name);
+        treeNode* findChild(treeNode* source, string name);
 
         Album* euclidDist(string decade, vector<double> userVals);
 };

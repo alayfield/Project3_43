@@ -13,19 +13,19 @@ UnorderedMap<K, V>::UnorderedMap(int bucketNum) : bucketNum(bucketNum), elementS
 template<typename K, typename V>
 void UnorderedMap<K, V>::insert(const K &key, const V &value) {
     int index = hash(key) % bucketNum;
-    Node<K, V>* currentNode = theMap[index];
+    mapNode<K, V>* currentNode = theMap[index];
 
     // if duplicate inserted, updates it
     while(currentNode != nullptr) {
         if(currentNode->key == key) {
-            currentNode->value = value;
+            //currentNode->value = value;
             return;
         }
         currentNode = currentNode->next;
     }
 
     // creates a new node with the inputted key and value and then sets map index and increments element size
-    Node<K, V> *newNode = new Node<K, V>(key, value);
+    mapNode<K, V> *newNode = new mapNode<K, V>(key, value);
     newNode->next = theMap[index];
     theMap[index] = newNode;
     elementSize += 1;
@@ -42,16 +42,16 @@ unsigned int UnorderedMap<K, V>::hash(K key) {
     // here I used the djb2 hash function developed by Dan Bernstein
     if(std::is_same<K, std::string>::value) {
         unsigned int hash = 5381;
-        for(char c : key) {
-            hash = ((hash << 5) + hash) + c;
-        }
+        //for(char c : key) {
+          //  hash = ((hash << 5) + hash) + c;
+        //}
         return hash;
     }
     else if(std::is_same<K, int>::value) {
-        return key;
+        //return key;
     }
     else if(std::is_same<K, char>::value) {
-        return key;
+        //return key;
     }
     else {
         // string not inputted
@@ -63,13 +63,13 @@ unsigned int UnorderedMap<K, V>::hash(K key) {
 template<typename K, typename V>
 void UnorderedMap<K, V>::rehash() {
     int newBucketNum = bucketNum * 2;
-    vector<Node<K, V> *> newMap(newBucketNum, nullptr);
+    vector<mapNode<K, V> *> newMap(newBucketNum, nullptr);
 
     // goes through each bucket
     for(int i = 0; i < bucketNum; i++) {
-        Node<K, V> *currentNode = theMap[i];
+        mapNode<K, V> *currentNode = theMap[i];
         while(currentNode != nullptr) {
-            Node<K, V> *nextNode = currentNode->next;
+            mapNode<K, V> *nextNode = currentNode->next;
 
             int newIndex = hash(currentNode->key) % newBucketNum;
             currentNode->next = newMap[newIndex];
@@ -88,7 +88,7 @@ template<typename K, typename V>
 bool UnorderedMap<K, V>::findIf(const K &key) {
     // Finds the index using hash
     int index = hash(key) % bucketNum;
-    Node<K, V> *currentNode = theMap[index];
+    mapNode<K, V> *currentNode = theMap[index];
 
     // iterates through the adjacency list if it exists and if it finds the key it returns true
     while(currentNode != nullptr) {
@@ -103,10 +103,10 @@ bool UnorderedMap<K, V>::findIf(const K &key) {
 }
 
 template<typename K, typename V>
-Node<K, V> *UnorderedMap<K, V>::find(const K &key) {
+mapNode<K, V> *UnorderedMap<K, V>::find(const K &key) {
     // Finds the index using hash
     int index = hash(key) % bucketNum;
-    Node<K, V> *currentNode = theMap[index];
+    mapNode<K, V> *currentNode = theMap[index];
 
     // iterates through the adjacency list if it exists and if it finds the key, returns node
     while(currentNode != nullptr) {

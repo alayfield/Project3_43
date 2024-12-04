@@ -5,22 +5,22 @@
 using namespace std;
 
 B::B() {
-    root = new Node("root");
-    root->children.push_back(new Node("1960"));
-    root->children.push_back(new Node("1970"));
-    root->children.push_back(new Node("1980"));
-    root->children.push_back(new Node("1990"));
-    root->children.push_back(new Node("2000"));
-    root->children.push_back(new Node("2010"));
+    root = new treeNode("root");
+    root->children.push_back(new treeNode("1960"));
+    root->children.push_back(new treeNode("1970"));
+    root->children.push_back(new treeNode("1980"));
+    root->children.push_back(new treeNode("1990"));
+    root->children.push_back(new treeNode("2000"));
+    root->children.push_back(new treeNode("2010"));
 }
 
 B::~B() {
-    queue<Node*> q;
+    queue<treeNode*> q;
     q.push(root);
     while(!q.empty()) {
-        Node* temp = q.front();
+        treeNode* temp = q.front();
         q.pop();
-        for(Node* curr : q.front()->children) {
+        for(treeNode* curr : q.front()->children) {
             q.push(curr);
         }
         delete temp;
@@ -29,31 +29,31 @@ B::~B() {
 
 void B::insertSong(Song* songNode) {
     string decade = getDecade(songNode->year);
-    Node* decadeNode = findChild(root, decade); //find decade node if already exists
+    treeNode* decadeNode = findChild(root, decade); //find decade node if already exists
     if(!decadeNode) return; //if decade not found, exit function
 
-    Node* artistNode = findChild(decadeNode, songNode->artistName); //find artist node if already exists
+    treeNode* artistNode = findChild(decadeNode, songNode->artistName); //find artist node if already exists
     if(!artistNode) { //if no node for the artist exists, create a new artist structure and add node
         Artist* tempArtist = new Artist;
         tempArtist->artistName = songNode->artistName;
-        artistNode = new Node(tempArtist->artistName, tempArtist);
+        artistNode = new treeNode(tempArtist->artistName, tempArtist);
         decadeNode->children.push_back(artistNode);
         cout << "created artist " << tempArtist->artistName << endl;
     }
 
-    Node* albumNode = findChild(artistNode, songNode->albumName); //find album node if already exits
+    treeNode* albumNode = findChild(artistNode, songNode->albumName); //find album node if already exits
     if(!albumNode) { //if no node for the album exists, create a new artist structure and add node
         Album* tempAlbum = new Album;
         tempAlbum->albumID = songNode->albumID;
         tempAlbum->albumName = songNode->albumName;
         tempAlbum->artistName = songNode->artistName;
         tempAlbum->year = songNode->year;
-        albumNode = new Node(tempAlbum->albumName, tempAlbum);
+        albumNode = new treeNode(tempAlbum->albumName, tempAlbum);
         artistNode->children.push_back(albumNode);
         cout << "created album " << tempAlbum->albumName << endl;
     }
     
-    albumNode->children.push_back(new Node(songNode->name, songNode)); //add the song to the album node's children
+    albumNode->children.push_back(new treeNode(songNode->name, songNode)); //add the song to the album node's children
     rebalanceAlbum(albumNode, songNode);
 }
 
@@ -63,14 +63,14 @@ void B::rebalanceTree() {
     }
 }
 
-void B::rebalanceDecade(Node* decade) {
+void B::rebalanceDecade(treeNode* decade) {
     if(!decade) return; //if node doesnt exist, exit to avoid segfault
     for (auto artist : decade->children) {
         rebalanceArtist(artist);
     }
 }
 
-void B::rebalanceAlbum(Node* albumNode, Song* song) {
+void B::rebalanceAlbum(treeNode* albumNode, Song* song) {
     Album* albumVal = albumNode->album;
 
     albumVal->danceability = findAvg(albumVal->danceability, double(albumNode->children.size()), song->danceability);
@@ -82,10 +82,10 @@ void B::rebalanceAlbum(Node* albumNode, Song* song) {
     albumVal->tempo = findAvg(albumVal->tempo, double(albumNode->children.size()), song->tempo);
 }
 
-void B::rebalanceArtist(Node* artistNode) {
+void B::rebalanceArtist(treeNode* artistNode) {
     Artist* artistVal = artistNode->artist;
     auto size = double(artistNode->children.size());
-    for(Node* child : artistNode->children) {
+    for(treeNode* child : artistNode->children) {
         artistVal->danceability += child->album->danceability;
         artistVal->energy += child->album->energy;
         artistVal->speechiness += child->album->speechiness;
@@ -104,24 +104,24 @@ void B::rebalanceArtist(Node* artistNode) {
 }
 
 Album* B::searchAlbum(string decade, string artistName, string albumName) {
-    Node* decadeNode = findChild(root, decade); //find decade node if already exists
+    treeNode* decadeNode = findChild(root, decade); //find decade node if already exists
     if(!decadeNode) {
         cout << "decade not found" << endl;
         return nullptr; //if decade not found, exit function
     }
 
-    Node* artistNode = findChild(decadeNode, artistName); //find artist node if already exists
+    treeNode* artistNode = findChild(decadeNode, artistName); //find artist node if already exists
     if(!artistNode) {
         cout << "artist not found" << endl;
         return nullptr; //if no node for the artist exists, exit function
     }
 
-    Node* albumNode = findChild(artistNode, albumName); //find album node, or nullptr if doesnt exist
+    treeNode* albumNode = findChild(artistNode, albumName); //find album node, or nullptr if doesnt exist
     return albumNode->album;
 }
 
-Node* B::findChild(Node* source, string name) {
-    for(Node* curr : source->children) { //traverse to if child exists and return if found
+treeNode* B::findChild(treeNode* source, string name) {
+    for(treeNode* curr : source->children) { //traverse to if child exists and return if found
         if (curr->name == name) {
             return curr;
         }
@@ -133,9 +133,9 @@ Album* B::euclidDist(string decade, vector<double> userVals) {
     double x1, x2, x3, x4, x5, x6, x7;
     double minED = 999999999;
     double currED = 0;
-    Node* bestArtist = nullptr;
+    treeNode* bestArtist = nullptr;
     Album* bestAlbum = nullptr;
-    Node* decadeNode = findChild(root, decade);
+    treeNode* decadeNode = findChild(root, decade);
 
     for (auto artist : decadeNode->children) {
         x1 = pow(artist->artist->danceability - userVals[0], 2);

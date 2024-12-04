@@ -78,7 +78,7 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
                                  stoi(year)};
 
         bTree.insertSong(newSong);
-        //cout << index << ": added to tree" << endl;
+        cout << index << ": added to tree" << endl;
         // Insert into map
     }
     bTree.rebalanceTree();
