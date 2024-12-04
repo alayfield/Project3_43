@@ -13,12 +13,12 @@ UnorderedMap<K, V>::UnorderedMap(int bucketNum) : bucketNum(bucketNum), elementS
 template<typename K, typename V>
 void UnorderedMap<K, V>::insert(const K &key, const V &value) {
     int index = hash(key) % bucketNum;
-    Node<K, V> *currentNode = theMap[index];
+    Node<K, V>* currentNode = theMap[index];
 
-    // If duplicate inserted, updates it
+    // if duplicate inserted, updates it
     while(currentNode != nullptr) {
         if(currentNode->key == key) {
-            //currentNode->value = value;
+            currentNode->value = value;
             return;
         }
         currentNode = currentNode->next;
@@ -38,20 +38,20 @@ void UnorderedMap<K, V>::insert(const K &key, const V &value) {
 
 // I looked up what the is_same function was on c plus plus https://cplusplus.com/reference/type_traits/is_same/
 template<typename K, typename V>
-int UnorderedMap<K, V>::hash(const K& key) {
+unsigned int UnorderedMap<K, V>::hash(K key) {
     // here I used the djb2 hash function developed by Dan Bernstein
     if(std::is_same<K, std::string>::value) {
-        int hash = 5381;
+        unsigned int hash = 5381;
         for(char c : key) {
             hash = ((hash << 5) + hash) + c;
         }
         return hash;
     }
     else if(std::is_same<K, int>::value) {
-        //return key;
+        return key;
     }
     else if(std::is_same<K, char>::value) {
-        //return key;
+        return key;
     }
     else {
         // string not inputted
@@ -120,23 +120,24 @@ Node<K, V> *UnorderedMap<K, V>::find(const K &key) {
     return nullptr;
 }
 
-void NestedMap::insert(const Song& song) {
-    // checks if artist is inputted, if not inputs
-    if (!artistMap.findIf(song.artistName)) {
-        artistMap.insert(song.artistName, UnorderedMap<std::string, UnorderedMap<std::string, Song>>());
+void NestedMap::insert(Song& song) {
+    // hash the names of the artist, album, and song
+    int artistHash = songMap.hash(song.artistName);
+    int albumHash = songMap.hash(song.albumName);
+    int songHash = songMap.hash(song.name);
+
+    // check if artist exists, inserts if not
+    if (!artistMap.findIf(artistHash)) {
+        artistMap.insert(artistHash, UnorderedMap<unsigned int, UnorderedMap<unsigned int, Song>>());
     }
 
-    // gets album map
-    auto& albumMap = artistMap.find(song.artistName)->value;
-
-    // checks if album inputted, if not inputs
-    if(!albumMap.findIf(song.albumName)) {
-        albumMap.insert(song.albumName, UnorderedMap<std::string, Song>());
+    // checks if album exists, if not inserts
+    if (!artistMap.find(artistHash)->value.findIf(albumHash)) {
+        artistMap.find(artistHash)->value.insert(albumHash, UnorderedMap<unsigned int, Song>());
     }
 
-    // gets song map
-    auto& songMap = albumMap.find(song.albumName)->value;
-
-    // inserts song
-    songMap.insert(song.name, song);
+    // inserts the song
+    artistMap.find(artistHash)->value.find(albumHash)->value.insert(songHash, song);
 }
+
+
