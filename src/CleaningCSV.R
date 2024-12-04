@@ -1,7 +1,7 @@
 library(dplyr)
 library(stringr)
+library(MASS)
 
-## setwd("~/Documents/COP3530/Project3")
 dat <- read.csv("csv/tracks_features.csv")
 
 ## Removing unecessary data
@@ -60,3 +60,15 @@ dat$artists <- gsub(",", "", dat$artists)
 
 ## Write to new CSV
 write.csv(dat,file="csv/cleaned_tracks.csv")
+
+## Finding inverse covariance matrix
+remove <- c("id", "name", "album", "album_id",
+            "artists", "artist_ids", "tempo", "year")
+dat <- dat[,!(names(dat) %in% remove)]
+res <- cov(dat)
+res <-ginv(res)
+
+means <- colMeans(dat)
+means
+
+write.csv(res, file="csv/cov_matrix.csv")
