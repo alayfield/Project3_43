@@ -42,9 +42,9 @@ unsigned int UnorderedMap<K, V>::hash(K key) {
     // here I used the djb2 hash function developed by Dan Bernstein
     if(std::is_same<K, std::string>::value) {
         unsigned int hash = 5381;
-        //for(char c : key) {
-          //  hash = ((hash << 5) + hash) + c;
-        //}
+        for(char c : key) {
+            hash = ((hash << 5) + hash) + c;
+        }
         return hash;
     }
     else if(std::is_same<K, int>::value) {
@@ -120,6 +120,7 @@ mapNode<K, V> *UnorderedMap<K, V>::find(const K &key) {
     return nullptr;
 }
 
+/*
 void NestedMap::insert(Song& song) {
     // hash the names of the artist, album, and song
     int artistHash = songMap.hash(song.artistName);
@@ -139,5 +140,4 @@ void NestedMap::insert(Song& song) {
     // inserts the song
     artistMap.find(artistHash)->value.find(albumHash)->value.insert(songHash, song);
 }
-
-
+*/

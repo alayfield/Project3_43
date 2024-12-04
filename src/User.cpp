@@ -4,7 +4,13 @@
  * https://rpubs.com/PeterDola/SpotifyTracks
  * 2. Set precision and trailing zeros:
  * https://stackoverflow.com/questions/17341870/correct-use-of-stdcout-precision-not-printing-trailing-zeros
+ *
+ * Information Linked in displayMethod():
+ * https://www.geeksforgeeks.org/euclidean-distance/
+ * https://www.sciencedirect.com/topics/computer-science/mahalanobis-distance
+ * "Information from https://rpubs.com/PeterDola/SpotifyTracks"
  */
+
 User::User() {
     danceability = 0;
     energy = 0;
@@ -19,7 +25,7 @@ User::User() {
 void User::mainMenu(bool completed) {
     /* Prints main menu options */
     if (completed) {
-        cout << "\n   --- Survey Complete ---\n"
+        cout << "\n1. Retake the survey.\n"
                 "2. Learn more about our method.\n"
                 "3. Quit" << endl;
     }
@@ -61,10 +67,14 @@ void User::displayMethod() { // 1
             "averages of the album values.\n"
             "\n"
             "When you are asked in the survey about your favorite albums, we are getting a sense of your taste and \n"
-            "finding something similar. Specifically, we are using the Euclidean distance algorithm.\n"
+            "finding something similar. Specifically, we are using the Euclidean distance algorithm and the \n"
+            "Mahalanobis algorithm. These may recommend the same album or two different albums.\n"
             "\n"
             "Learn more about Euclidean distance:\n"
             "https://www.geeksforgeeks.org/euclidean-distance/\n"
+            "\n"
+            "Learn more about Mahalanobis distance:\n"
+            "https://www.sciencedirect.com/topics/computer-science/mahalanobis-distance\n"
             "\n"
             "Understanding Spotify track data:\n"
             "  -  Danceability: A number between 0 and 1 to indicate whether a song would be good for dancing. This is \n"
@@ -97,30 +107,57 @@ void User::userPrompts(int prompt) {
     }
 }
 
-void User::displayAlbum(Album* albumRec, const pair<string, string>& names) const {
+void User::displayAlbum(Album* euclidRec, Album* mahaRec, const pair<string, string>& euclidNames, const pair<string, string>& mahaNames) const {
     /* Displays album information.
      * Compares album quantifiable data to user data from survey.
      * Links to album on Spotify.
      */
-    cout << "Album Found!\n" << endl;
-    cout << names.first << ", " << albumRec->year << endl;
-    cout << "by " << names.second << endl;
+    cout << "Albums Found!\n" << endl;
+    cout << "Using Euclidean Distance Algorithm:" << endl;
+    cout << euclidNames.first + ", " << euclidRec->year << endl;
+    cout << "by " + euclidNames.second << endl;
     cout << "\n";
 
-    cout << "Relevant Stats  | Album Stats    | User Preference" << endl; // 16 characters between "|"
-    cout << "--------------------------------------------------" << endl;
-    cout << fixed << setprecision(4); // 2
-    cout << "danceability    | " << albumRec->danceability << "         | " << danceability << endl;
-    cout << "energy          | " <<  albumRec->energy << "         | " << energy << endl;
-    cout << "speechiness     | " <<  albumRec->speechiness << "         | " << speechiness << endl;
-    cout << "acousticness    | " <<  albumRec->acousticness << "         | " << acousticness << endl;
-    cout << "instrumentalness| " <<  albumRec->instrumentalness << "         | " << instrumentalness << endl;
-    cout << "valence         | " <<  albumRec->valence << "         | " << valence << endl;
-    cout << setprecision(2);
-    cout << "tempo           | " <<  albumRec->tempo << "         | " << tempo << endl;
+    cout << "Using Mahalanobis Distance Algorithm:" << endl;
+    cout << mahaNames.first + ", " << mahaRec->year << endl;
+    cout << "by " + mahaNames.second << endl;
+    cout << "\n";
 
-    cout << "\nSpotify link:" << endl;
-    cout << "https://open.spotify.com/album/" << albumRec->albumID.substr(1, 22) << endl;
+    cout << "Relevant Stats   | User Preference | Album 1 Stats   | Album 2 Stats   " << endl; // 17 characters between "|"
+    cout << "-----------------------------------------------------------------------" << endl;
+    cout << fixed << setprecision(4); // 2
+    cout << "danceability     | " << danceability << "          | " << euclidRec->danceability << "          | " << mahaRec->danceability << endl;
+    cout << "energy           | " << energy << "          | " << euclidRec->energy << "          | " << mahaRec->energy << endl;
+    cout << "speechiness      | " << speechiness << "          | " << euclidRec->speechiness << "          | "<< mahaRec->speechiness << endl;
+    cout << "acousticness     | " << acousticness <<  "          | " << euclidRec->acousticness << "          | " << mahaRec->acousticness << endl;
+    cout << "instrumentalness | " << instrumentalness << "          | " << euclidRec->instrumentalness << "          | " << mahaRec->instrumentalness << endl;
+    cout << "valence          | " << valence <<  "          | " << euclidRec->valence << "          | " << mahaRec->valence << endl;
+    cout << setprecision(2);
+    cout << "tempo            | " <<  tempo << "          | " << euclidRec->tempo << "          | " << mahaRec->tempo << endl;
+
+    cout << "\n" + euclidNames.first + " Spotify link:" << endl;
+    cout << "https://open.spotify.com/album/" << euclidRec->albumID.substr(1, 22) << endl;
+    cout << "\n" + mahaNames.first + " Spotify link:" << endl;
+    cout << "https://open.spotify.com/album/" << mahaRec->albumID.substr(1, 22) << endl;
+}
+
+void User::displayComparison(Album* euclidRec, Album* mahaRec) const {
+    double euclidDev = 0;
+    double mahaDev = 0;
+
+    euclidDev += abs(euclidRec->danceability - danceability) + abs(euclidRec->energy - energy) +
+                 abs(euclidRec->speechiness - speechiness) + abs(euclidRec->acousticness - acousticness) +
+                 abs(euclidRec->instrumentalness - instrumentalness) + abs(euclidRec->valence - valence);
+    euclidDev /= 6;
+    mahaDev += abs(mahaRec->danceability - danceability) + abs(mahaRec->energy - energy) +
+                 abs(mahaRec->speechiness - speechiness) + abs(mahaRec->acousticness - acousticness) +
+                 abs(mahaRec->instrumentalness - instrumentalness) + abs(mahaRec->valence - valence);
+    mahaDev /= 6;
+
+    cout << fixed << setprecision(6);
+    cout << "\nAverage absolute deviance:\n"
+            "Euclidean distance:   " << euclidDev << endl;
+    cout << "Mahalanobis distance: " << mahaDev << endl;
 }
 
 void User::setYear(int startRange) {
@@ -145,12 +182,23 @@ void User::addPref(Album* albumLike) {
     userPref.emplace_back(albumLike);
 }
 
+void User::resetPref() {
+    danceability = 0;
+    energy = 0;
+    speechiness = 0;
+    acousticness = 0;
+    instrumentalness = 0;
+    valence = 0;
+    tempo = 0;
+    userPref.clear();
+}
+
 int User::getPrefNum() {
     /* Returns how many valid albums user inputted */
     return int(userPref.size());
 }
 
-int User::getYear() {
+int User::getYear() const {
     /* Returns decade preference */
     return year;
 }

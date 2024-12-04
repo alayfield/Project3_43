@@ -99,9 +99,34 @@ void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, 
                                  stoi(year)};
 
         bTree.insertSong(newSong);
-        // cout << index << ": added to tree" << endl;
-        // Insert into map
     }
     // Calculates averages for artists from album averages
     bTree.rebalanceTree();
+    songs.close();
+}
+
+vector<vector<double>> readCov(const string& filePath) {
+    /* Reads in the inverse correlation matrix */
+    vector<vector<double>> corrMatrix(6, vector<double>(6));
+    string currVal;
+
+    ifstream cov(filePath); // Open file
+
+    // Checks that file is properly loaded
+    if (!cov.is_open()) {
+        cout << "File not opened" << endl;
+    }
+
+    getline(cov, currVal,'\n'); // Gets rid of labels
+    for (int i=0; i < 6; i++) {
+        (getline(cov, currVal, ',')); // Gets rid of labels
+        for (int j=0; j < 5; j++) {
+            getline(cov, currVal, ',');
+            corrMatrix[i][j] = stod(currVal);
+        }
+        getline(cov, currVal, '\n');
+        corrMatrix[i][5] = stod(currVal);
+    }
+    cov.close();
+    return corrMatrix;
 }

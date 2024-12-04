@@ -7,56 +7,64 @@
 
 /* 1. Timing document:
  * https://www.ibm.com/docs/en/rdfi/9.6.0?topic=functions-clock-determine-processor-time
- * 2. To upper:
+ * 2. Time in milliseconds:
+ * https://stackoverflow.com/questions/361363/how-to-measure-time-in-milliseconds-using-ansi-c
+ * 3. To upper:
  * https://cplusplus.com/reference/cctype/toupper/
+ * 4. Clang-Tidy recommendation
  */
 
 int main() {
-    // Build data structures
-    double totalTime, treeTime, mapTime;
+    // Build data structure
+    double totalTime, euclidTime, mahaTime;
     map<string, pair<string, string>> mapIDs;
-    pair<string, string> foundNames;
+    pair<string, string> foundNames1;
+    pair<string, string> foundNames2;
     B bDS;
-    // Map mapDS;
     User RankedRecords;
     string input;
     bool survey = false;
 
     createDS("../csv/cleaned_tracks.csv", mapIDs, bDS);
+    vector<vector<double>> covMatrix = readCov("../csv/cov_matrix.csv");
 
     while(true) {
-        RankedRecords.mainMenu(survey);
+        User::mainMenu(survey); // 4
         getline(cin, input);
 
-        if (input == "1" && !survey) {
+        if (input == "1") {
+            if (survey) {
+                RankedRecords.resetPref();
+            }
+
             bool year = false;
             bool pref = false;
             bool yn;
             string album;
             string artist;
-            Album* treeAlbum;
-            Album* mapAlbum;
+            Album* euclidAlbum;
+            Album* mahaAlbum;
             Album* albumLike;
 
-            RankedRecords.surveyQs(1);
+            User::surveyQs(1); // 4
             while(!year) {
                 getline(cin, input);
                 year = true;
 
-                if (toupper(input[0]) == 'A') RankedRecords.setYear(1960);      // 2
+                if (toupper(input[0]) == 'A') RankedRecords.setYear(1960);      // 3
                 else if (toupper(input[0]) == 'B') RankedRecords.setYear(1970);
                 else if (toupper(input[0]) == 'C') RankedRecords.setYear(1980);
                 else if (toupper(input[0]) == 'D') RankedRecords.setYear(1990);
                 else if (toupper(input[0]) == 'E') RankedRecords.setYear(2000);
                 else if (toupper(input[0]) == 'F') RankedRecords.setYear(2010);
                 else {
-                    RankedRecords.userPrompts(3);
+                    User::userPrompts(3); // 4
                     year = false;
                 }
             }
 
-            RankedRecords.surveyQs(2);
-            RankedRecords.userPrompts(1);
+            User::surveyQs(2);  // 4
+            User::userPrompts(1);
             while(!pref) {
                 cout << "Album name: ";
                 getline(cin, album,'\n');
@@ -71,9 +79,9 @@ int main() {
 
                 if (albumLike != nullptr) RankedRecords.addPref(albumLike);
                 if (albumLike == nullptr) cout << "\nAlbum not found." << endl;
-                if (RankedRecords.getPrefNum() == 0) RankedRecords.userPrompts(2);
+                if (RankedRecords.getPrefNum() == 0) User::userPrompts(2); // 4
                 else {
-                    RankedRecords.surveyQs(3);
+                    User::surveyQs(3); // 4
                     yn = false;
                     while (!yn) {
                         getline(cin, input);
@@ -84,27 +92,30 @@ int main() {
                         else if (input == "Y" || input == "Yes" || input == "y" || input == "yes") {
                             yn = true;
                         }
-                        else RankedRecords.userPrompts(3);
+                        else User::userPrompts(3); // 4
                     }
                 }
             }
             cout << "\nSurvey complete! Finding album..." << endl;
-            totalTime = double(clock()); // 1
-            treeAlbum = bDS.euclidDist(to_string(RankedRecords.getYear()),RankedRecords.getData());
-            treeTime = double(clock()) - totalTime;
-            // Find album in map
-            mapTime = double(clock()) - totalTime - treeTime;
 
-            foundNames = mapIDs[treeAlbum->albumID];
-            RankedRecords.displayAlbum(treeAlbum, foundNames);
-            cout << "\nTime to find in tree: " << treeTime << endl;
-            cout << "Time to find in map: " << mapTime << endl;
+            totalTime = double(clock()); // 1
+            euclidAlbum = bDS.euclidDist(to_string(RankedRecords.getYear()),RankedRecords.getData());
+            euclidTime = double(clock()) - totalTime;
+            mahaAlbum = bDS.mahaDist(to_string(RankedRecords.getYear()),RankedRecords.getData(), covMatrix);
+            mahaTime = double(clock()) - totalTime - euclidTime;
+
+            foundNames1 = mapIDs[euclidAlbum->albumID];
+            foundNames2 = mapIDs[mahaAlbum->albumID];
+            RankedRecords.displayAlbum(euclidAlbum, mahaAlbum, foundNames1, foundNames2);
+            cout << "\nTime to find Euclidean distance:   " << euclidTime * 1000 / (CLOCKS_PER_SEC) << " ms" << endl; // 3
+            cout << "Time to find Mahalanobis distance: " << mahaTime * 1000 / (CLOCKS_PER_SEC) << " ms" << endl;
+            RankedRecords.displayComparison(euclidAlbum, mahaAlbum);
 
             survey = true;
         }
 
         else if (input == "2") { // Display more information on what Ranked Records is doing
-            RankedRecords.displayMethod();
+            User::displayMethod(); // 4
         }
 
         else if (input == "3") { // Exit
@@ -112,7 +123,7 @@ int main() {
         }
 
         else { // Invalid entry, prompts to try again
-            RankedRecords.userPrompts(3);
+            User::userPrompts(3); // 4
         }
     }
 }

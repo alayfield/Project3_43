@@ -45,7 +45,6 @@ void B::insertSong(Song* songNode) {
         tempArtist->artistName = songNode->artistName;
         artistNode = new treeNode(tempArtist->artistName, tempArtist);
         decadeNode->children.push_back(artistNode);
-        cout << "created artist " << tempArtist->artistName << endl;
     }
 
     treeNode* albumNode = findChild(artistNode, songNode->albumName); // Find album node if it exits
@@ -59,7 +58,6 @@ void B::insertSong(Song* songNode) {
         tempAlbum->year = songNode->year;
         albumNode = new treeNode(tempAlbum->albumName, tempAlbum);
         artistNode->children.push_back(albumNode);
-        cout << "created album " << tempAlbum->albumName << tempAlbum->year << endl;
     }
     
     albumNode->children.push_back(new treeNode(songNode->name, songNode)); // Add song to the album node's children
@@ -184,6 +182,74 @@ Album* B::euclidDist(string decade, vector<double> userVals) {
             bestAlbum = album->album; // Album with the smallest Euclidean distance saved and returned
             minED = currED;
         }
+    }
+    return bestAlbum;
+}
+
+Album* B::mahaDist(string decade, vector<double> userVals, vector<vector<double>> corrMatrix) {
+    /* Traverses entire decade subtree to find similar album based on Mahalanobis distance.
+     * First finds most similar artist to user preference, then most similar album of that artist.
+     */
+    vector<double> diff(6);
+    vector<double> means = {0.49250136, 0.51474696, 0.08341588,
+                            0.44139313, 0.27696498, 0.43207432};
+    double minMD = 999999999;
+    double currMD = 0;
+    double curr;
+    treeNode *bestArtist = nullptr;
+    Album *bestAlbum = nullptr;
+    treeNode *decadeNode = findChild(root, decade);
+
+    // Traversing through all artists under decade and calculates Mahalanobis distance
+    for (auto artist: decadeNode->children) {
+        diff[0] = artist->artist->danceability - userVals[0];
+        diff[1] = artist->artist->energy - userVals[1];
+        diff[2] = artist->artist->speechiness - userVals[2];
+        diff[3] = artist->artist->acousticness - userVals[3];
+        diff[4] = artist->artist->instrumentalness - userVals[4];
+        diff[5] = artist->artist->valence - userVals[5];
+
+        for (int j=0; j < 6; j++) {
+            curr = 0;
+            for (int i=0; i < 6; i++) {
+                curr += diff[i] * corrMatrix[i][j];
+            }
+            currMD += curr * diff[j];
+        }
+
+        currMD = sqrt(currMD);
+        if (currMD < minMD) {
+            bestArtist = artist; // Artist with the smallest Mahalanobis distance saved
+            minMD = currMD;
+        }
+        currMD = 0;
+    }
+
+    minMD = 999999999;
+
+    // Traversing through all albums under most similar artists and calculates Mahalanobis distance
+    for (auto album: bestArtist->children) {
+        diff[0] = album->album->danceability - userVals[0];
+        diff[1] = album->album->energy - userVals[1];
+        diff[2] = album->album->speechiness - userVals[2];
+        diff[3] = album->album->acousticness - userVals[3];
+        diff[4] = album->album->instrumentalness - userVals[4];
+        diff[5] = album->album->valence - userVals[5];
+
+        for (int j=0; j < 6; j++) {
+            curr = 0;
+            for (int i=0; i < 6; i++) {
+                curr += diff[i] * corrMatrix[i][j];
+            }
+            currMD += curr * diff[j];
+        }
+
+        currMD = sqrt(currMD);
+        if (currMD < minMD) {
+            bestAlbum = album->album; // Album with the smallest Mahalanobis distance saved
+            minMD = currMD;
+        }
+        currMD = 0;
     }
     return bestAlbum;
 }

@@ -25,11 +25,14 @@ public:
     static void surveyQs(int question);
     static void displayMethod();
     static void userPrompts(int prompt);
-    void displayAlbum(Album* albumRec, const pair<string, string>& names) const;
+    void displayAlbum(Album* euclidRec, Album* mahaRec, const pair<string, string>& euclidNames,
+                      const pair<string, string>& mahaNames) const;
+    void displayComparison(Album* euclidRec, Album* mahaRec) const;
     void setYear(int startRange);
     void addPref(Album* albumLike);
+    void resetPref();
     int getPrefNum();
-    int getYear();
+    int getYear() const;
     vector<double> getData();
 };
 

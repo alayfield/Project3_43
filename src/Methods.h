@@ -62,4 +62,6 @@ string getDecade(int year);
 
 void createDS(const string& filePath, map<string,pair<string, string>>& mapIDs, B& bTree);
 
+vector<vector<double>> readCov(const string& filePath);
+
 #endif //PROJECT3_METHODS_H

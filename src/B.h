@@ -33,6 +33,7 @@ class B {
         Album* searchAlbum(string decade, string artistName, string albumName);
         treeNode* findChild(treeNode* source, string name);
         Album* euclidDist(string decade, vector<double> userVals);
+        Album* mahaDist(string decade, vector<double> userVals, vector<vector<double>> corrMatrix);
 };
 
 #endif //PROJECT3_43_B_H

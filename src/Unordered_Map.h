@@ -15,7 +15,7 @@
 #include "Methods.h"
 
 // What a generic node for an unordered map
-template <typename K, typename V>
+template <typename K,typename V>
 struct mapNode {
     K key;
     V value;
@@ -45,7 +45,7 @@ class UnorderedMap {
 
 struct NestedMap {
     // Artist Name -> Album -> Song
-    UnorderedMap<unsigned int, UnorderedMap<unsigned int, UnorderedMap<unsigned int, Song>>> artistMap;
+    UnorderedMap<string, UnorderedMap<string, UnorderedMap<string, Song>>> artistMap;
     UnorderedMap<string, Song> songMap;
 
     void insert(Song& song);
