@@ -12,6 +12,7 @@
 #include <string>
 
 #include "User.h"
+#include "Methods.h"
 
 // What a generic node for an unordered map
 template <typename K, typename V>
@@ -30,23 +31,24 @@ class UnorderedMap {
     int elementSize;
     int bucketNum;
     std::vector<Node<K, V>*> theMap;
-    int hash(const K& key);
     void rehash();
 
-public:
-    UnorderedMap(int bucketNum = 32);
-    void insert(const K& key, const V& value);
-    bool findIf(const K& key);
-    Node<K, V>* find(const K& key);
+    public:
+      UnorderedMap(int bucketNum = 32);
+      void insert(const K& key, const V& value);
+      bool findIf(const K& key);
+      Node<K, V>* find(const K& key);
+      unsigned int hash(K key);
 
 };
 
 
 struct NestedMap {
     // Artist Name -> Album -> Song
-    UnorderedMap<std::string, UnorderedMap<std::string, UnorderedMap<std::string, Song>>> artistMap;
+    UnorderedMap<unsigned int, UnorderedMap<unsigned int, UnorderedMap<unsigned int, Song>>> artistMap;
+    UnorderedMap<string, Song> songMap;
 
-    void insert(const Song& song);
+    void insert(Song& song);
 };
 
 #endif //UNORDERED_MAP_H
